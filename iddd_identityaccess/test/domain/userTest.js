@@ -3,7 +3,53 @@ var should = chai.should()
 
 let User = require("../../domain/user.js")
 
+// TODO
+let fixtureUser = () => { return new User("joe") }
+let DomainEventPublisher = {
+  subscribe(whatever, callback) {
+    console.log("Subscribe to some event")
+    setTimeout(callback, 20)
+  }
+}
+
+let Enablement = class {}
+let ContactInformation = class {}
+let FullName = class {}
+let EmailAddress = class {}
+let PostalAddress = class {}
+let Telephone = class {}
+
+let FIXTURE_PASSWORD = "SecretPassword!"
+let FIXTURE_TENANT_DESCRIPTION = "This is a test tenant."
+let FIXTURE_TENANT_NAME = "Test Tenant"
+let FIXTURE_USER_EMAIL_ADDRESS = "jdoe@saasovation.com"
+let FIXTURE_USER_EMAIL_ADDRESS2 = "zdoe@saasovation.com"
+let FIXTURE_USERNAME = "jdoe"
+let FIXTURE_USERNAME2 = "zdoe"
+let TWENTY_FOUR_HOURS = (1000 * 60 * 60 * 24)
+
+let fixtureToday = function() {
+  return new Date()
+}
+
+let fixtureTomorrow = function() {
+  new Date(fixtureToday().valueOf() + TWENTY_FOUR_HOURS)
+}
+
+let fixtureYesterday = function() {
+  new Date(fixtureToday().valueOf() - TWENTY_FOUR_HOURS)
+}
+
+let fixtureDayBeforeYesterday = function() {
+  new Date(fixtureToday().valueOf() - TWENTY_FOUR_HOURS * 2)
+}
+
+let fixtureDayAfterTomorrow = function() {
+  new Date(fixtureToday().valueOf() + TWENTY_FOUR_HOURS * 2)
+}
+
 describe("User", function() {
+
   it ("Should construct", function() {
     let myUser = new User("test")
     myUser.name.should.equal("test")
@@ -13,7 +59,7 @@ describe("User", function() {
     // TODO!
     let user = fixtureUser()
 
-    assertTrue(user.enabled);
+    user.enabled.should.be.true
   })
 
   it ("Should allow a user to disabled", function(done) {
@@ -37,7 +83,7 @@ describe("User", function() {
       done()
     })
 
-    user.defineEnablement(new Enablement(false, this.today(), this.tomorrow()))
+    user.defineEnablement(new Enablement(false, fixtureToday(), fixtureTomorrow()))
 
     user.enabled.should.be.false
   })
@@ -50,7 +96,7 @@ describe("User", function() {
       done()
     })
 
-    user.defineEnablement(new Enablement(false, this.dayBeforeYesterday(), this.yesterday()))
+    user.defineEnablement(new Enablement(false, fixtureDayBeforeYesterday(), fixtureYesterday()))
 
     user.enabled.should.be.false
   })
@@ -66,7 +112,7 @@ describe("User", function() {
     })
 
     try {
-      user.defineEnablement(new Enablement(false, this.dayBeforeYesterday(), this.yesterday()))
+      user.defineEnablement(new Enablement(false, fixtureDayBeforeYesterday(), fixtureYesterday()))
     } catch (err) {
       /// Good!
       failure = true
