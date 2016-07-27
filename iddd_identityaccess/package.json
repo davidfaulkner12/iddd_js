@@ -1,0 +1,15 @@
+{
+  "name": "iddd_identityaccess",
+  "version": "0.1.0",
+  "description": "JS port of iddd identity access",
+  "main": "start.js",
+  "scripts": {
+    "test": "mocha --recursive"
+  },
+  "author": "David Wang-Faulkner (david@wangfaulkner.com)",
+  "license": "ISC",
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^2.5.3"
+  }
+}
