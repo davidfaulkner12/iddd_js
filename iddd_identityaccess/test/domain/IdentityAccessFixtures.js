@@ -1,7 +1,4 @@
-let ContactInformation = require("../../domain/identity/ContactInformation")
-let EmailAddress = require("../../domain/identity/EmailAddress.js")
-let PostalAddress = require("../../domain/identity/PostalAddress.js")
-let Telephone = require("../../domain/identity/Telephone.js")
+const { ContactInformation, EmailAddress, PostalAddress, Telephone } = require("../../domain/identity/IdentityValueObjects.js")
 
 let fixture = {}
 
@@ -44,5 +41,15 @@ fixture.contactInformation = function() {
             new Telephone("303-555-1212"));
   return contactInformation
 }
+
+
+fixture.PASSWORD = "SecretPassword!"
+fixture.TENANT_DESCRIPTION = "This is a test tenant."
+fixture.TENANT_NAME = "Test Tenant"
+
+fixture.USERNAME = "jdoe"
+fixture.USERNAME2 = "zdoe"
+
+
 
 module.exports = fixture

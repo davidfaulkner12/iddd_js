@@ -2,30 +2,14 @@ let chai = require("chai")
 let should = chai.should()
 
 let User = require("../../domain/user.js")
+let DomainEventPublisher = require("../../common/domain/DomainEventPublisher.js")
 
 // TODO
 let fixtureUser = () => { return new User("joe") }
-let DomainEventPublisher = {
-  subscribe(whatever, callback) {
-    console.log("Subscribe to some event")
-    setTimeout(callback, 20)
-  }
-}
 
-let Enablement = class {}
-let ContactInformation = class {}
-let FullName = class {}
-let EmailAddress = class {}
-let PostalAddress = class {}
-let Telephone = class {}
-
-let FIXTURE_PASSWORD = "SecretPassword!"
-let FIXTURE_TENANT_DESCRIPTION = "This is a test tenant."
-let FIXTURE_TENANT_NAME = "Test Tenant"
-
-let FIXTURE_USERNAME = "jdoe"
-let FIXTURE_USERNAME2 = "zdoe"
-
+const {
+  Enablement, ContactInformation, FullName, EmailAddress, PostalAddress, Telephone
+} = require("../../domain/identity/IdentityValueObjects.js")
 
 let fixture = require("./IdentityAccessFixtures.js")
 
@@ -114,7 +98,7 @@ describe("User", function() {
     userDescriptor.tenantId.should.equal(user.tenantId)
 
     should.exist(userDescriptor.username)
-    userDescriptor.username.should.equal(FIXTURE_USERNAME)
+    userDescriptor.username.should.equal(fixture.USERNAME)
   })
 
   it("Should allow a user to change their password", function(done) {
@@ -126,7 +110,7 @@ describe("User", function() {
       done()
     })
 
-    user.changePassword(FIXTURE_PASSWORD, "ThisIsANewPassword")
+    user.changePassword(fixture.PASSWORD, "ThisIsANewPassword")
   })
 
   it("Should fail if a user doesn't know their password", function() {
@@ -142,18 +126,18 @@ describe("User", function() {
   it("Should hash user password on construction", function() {
     let user = fixtureUser()
 
-    FIXTURE_PASSWORD.should.not.equal(user.password())
+    fixture.PASSWORD.should.not.equal(user.password())
   })
 
   it("Should hash password on change", function() {
     let user = fixtureUser()
 
     // TODO String strongPassword = DomainRegistry.passwordService().generateStrongPassword();
-    //   user.changePassword(FIXTURE_PASSWORD, strongPassword);
+    //   user.changePassword(fixture.PASSWORD, strongPassword);
 
-    user.changePassword(FIXTURE_PASSWORD, "ThisIsANewPassword")
+    user.changePassword(fixture.PASSWORD, "ThisIsANewPassword")
 
-    FIXTURE_PASSWORD.should.not.equal(user.password)
+    fixture.PASSWORD.should.not.equal(user.password)
     // assertFalse(strongPassword.equals(user.password()));
     "ThisIsANewPassword".should.not.equal(user.password)
 
