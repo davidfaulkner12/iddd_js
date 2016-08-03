@@ -1,4 +1,7 @@
-const { ContactInformation, EmailAddress, PostalAddress, Telephone } = require("../../domain/identity/IdentityValueObjects.js")
+const { ContactInformation, EmailAddress, PostalAddress, Telephone, TenantId, Enablement, FullName } = require("../../domain/identity/IdentityValueObjects.js")
+const Person = require("../../domain/identity/Person")
+const User = require("../../domain/user.js")
+const uuid = require("uuid")
 
 let fixture = {}
 
@@ -50,6 +53,36 @@ fixture.TENANT_NAME = "Test Tenant"
 fixture.USERNAME = "jdoe"
 fixture.USERNAME2 = "zdoe"
 
+fixture.tenantAggregate = function() {
+  // TODO
+  return {
+    tenantId: new TenantId(uuid.v4())
+  }
+}
 
+fixture.personEntity = function(aTenant) {
+
+        let person =
+            new Person(
+                    aTenant.tenantId,
+                    new FullName("John", "Doe"),
+                    fixture.contactInformation());
+
+        return person;
+    }
+
+fixture.userAggregate = function() {
+
+   let user = new User(
+                    fixture.tenantAggregate().tenantId,
+                    fixture.USERNAME,
+                    fixture.PASSWORD,
+                    new Enablement(true, null, null),
+                    fixture.personEntity(fixture.tenantAggregate())
+                  )
+
+
+    return user;
+}
 
 module.exports = fixture

@@ -3,13 +3,6 @@ let should = chai.should()
 
 let _ = require("underscore")
 
-/*
-let ContactInformation = require("../../../domain/identity/ContactInformation.js")
-let EmailAddress = require("../../../domain/identity/EmailAddress.js")
-let PostalAddress = require("../../../domain/identity/PostalAddress.js")
-let Telephone = require("../../../domain/identity/Telephone.js")
-*/
-
 const { ContactInformation, EmailAddress, PostalAddress, Telephone } = require("../../../domain/identity/IdentityValueObjects.js")
 
 let fixture = require("../IdentityAccessFixtures.js")

@@ -9,6 +9,10 @@ describe("DomainEventPublisher", function() {
     DomainEventPublisher.reset()
   })
 
+  afterEach(function() {
+    DomainEventPublisher.reset()
+  })
+
   it("Has an instance property that returns itself", function() {
     DomainEventPublisher.should.equal(DomainEventPublisher.instance())
   })
