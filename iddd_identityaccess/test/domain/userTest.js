@@ -1,5 +1,5 @@
-var chai = require("chai")
-var should = chai.should()
+let chai = require("chai")
+let should = chai.should()
 
 let User = require("../../domain/user.js")
 
@@ -22,31 +22,12 @@ let Telephone = class {}
 let FIXTURE_PASSWORD = "SecretPassword!"
 let FIXTURE_TENANT_DESCRIPTION = "This is a test tenant."
 let FIXTURE_TENANT_NAME = "Test Tenant"
-let FIXTURE_USER_EMAIL_ADDRESS = "jdoe@saasovation.com"
-let FIXTURE_USER_EMAIL_ADDRESS2 = "zdoe@saasovation.com"
+
 let FIXTURE_USERNAME = "jdoe"
 let FIXTURE_USERNAME2 = "zdoe"
-let TWENTY_FOUR_HOURS = (1000 * 60 * 60 * 24)
 
-let fixtureToday = function() {
-  return new Date()
-}
 
-let fixtureTomorrow = function() {
-  new Date(fixtureToday().valueOf() + TWENTY_FOUR_HOURS)
-}
-
-let fixtureYesterday = function() {
-  new Date(fixtureToday().valueOf() - TWENTY_FOUR_HOURS)
-}
-
-let fixtureDayBeforeYesterday = function() {
-  new Date(fixtureToday().valueOf() - TWENTY_FOUR_HOURS * 2)
-}
-
-let fixtureDayAfterTomorrow = function() {
-  new Date(fixtureToday().valueOf() + TWENTY_FOUR_HOURS * 2)
-}
+let fixture = require("./IdentityAccessFixtures.js")
 
 describe("User", function() {
 
@@ -83,7 +64,7 @@ describe("User", function() {
       done()
     })
 
-    user.defineEnablement(new Enablement(false, fixtureToday(), fixtureTomorrow()))
+    user.defineEnablement(new Enablement(false, fixture.today(), fixture.tomorrow()))
 
     user.enabled.should.be.false
   })
@@ -96,7 +77,7 @@ describe("User", function() {
       done()
     })
 
-    user.defineEnablement(new Enablement(false, fixtureDayBeforeYesterday(), fixtureYesterday()))
+    user.defineEnablement(new Enablement(false, fixture.dayBeforeYesterday(), fixture.yesterday()))
 
     user.enabled.should.be.false
   })
@@ -112,7 +93,7 @@ describe("User", function() {
     })
 
     try {
-      user.defineEnablement(new Enablement(false, fixtureDayBeforeYesterday(), fixtureYesterday()))
+      user.defineEnablement(new Enablement(false, fixture.dayBeforeYesterday(), fixture.yesterday()))
     } catch (err) {
       /// Good!
       failure = true
@@ -127,7 +108,7 @@ describe("User", function() {
     let userDescriptor = user.userDescriptor
 
     should.exist(userDesciptor.emailAddress)
-    userDescriptor.emailAddress.should.equal(FIXTURE_USER_EMAIL_ADDRESS)
+    userDescriptor.emailAddress.should.equal(fixture.USER_EMAIL_ADDRESS)
 
     should.exist(userDescriptor.tenantId)
     userDescriptor.tenantId.should.equal(user.tenantId)
@@ -188,7 +169,7 @@ describe("User", function() {
 
     user.changePersonalContactInformation(
             new ContactInformation(
-                new EmailAddress(FIXTURE_USER_EMAIL_ADDRESS2),
+                new EmailAddress(fixture.USER_EMAIL_ADDRESS2),
                 new PostalAddress(
                         "123 Mockingbird Lane",
                         "Boulder",
@@ -198,7 +179,7 @@ describe("User", function() {
                 new Telephone("303-555-1210"),
                 new Telephone("303-555-1212")))
 
-    new EmailAddress(FIXTURE_USER_EMAIL_ADDRESS2).should.equal(user.person.emailAddress)
+    new EmailAddress(fixture.USER_EMAIL_ADDRESS2).should.equal(user.person.emailAddress)
     "123 Mockingbird Lane".should.equal(user.person.contactInformation.postalAddress.streetAddress)
   })
 

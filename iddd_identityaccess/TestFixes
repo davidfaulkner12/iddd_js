@@ -1,0 +1,24 @@
+let chai = require("chai")
+let should = chai.should()
+
+let Enablement = require("../../../domain/identity/Enablement.js")
+
+let fixture = require("../IdentityAccessFixtures.js")
+
+describe("xxxx", function() {
+
+})
+
+public void test(\w+)\(\) throws Exception \{
+it("$1", function() {
+
+(^\s)+}
+$1})
+
+ContactInformation cont
+
+assertEquals\((.*), (.*)\);
+$1.should.equal($2)
+
+assertFalse\((.*)\);
+$1.should.be.false
