@@ -1,9 +1,9 @@
 module.exports = {
-  FullName: require("./FullName.js"),
+  FullName: require("./FullName"),
   ContactInformation: require("./ContactInformation"),
-  EmailAddress: require("./EmailAddress.js"),
-  PostalAddress: require("./PostalAddress.js"),
-  Telephone: require("./Telephone.js"),
-  Enablement: require("./Enablement.js"),
-  TenantId: require("./TenantId.js")
+  EmailAddress: require("./EmailAddress"),
+  PostalAddress: require("./PostalAddress"),
+  Telephone: require("./Telephone"),
+  Enablement: require("./Enablement"),
+  TenantId: require("./TenantId")
 }

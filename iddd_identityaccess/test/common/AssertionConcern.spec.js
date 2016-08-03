@@ -1,9 +1,11 @@
-let chai = require("chai")
-let should = chai.should()
+const chai = require("chai")
+const should = chai.should()
 
-let AssertionConcern = require('../../common/AssertionConcern.js')
+const AssertionConcern = require('../../common/AssertionConcern')
 
-let fixtureAssertionConcern = () => { return new AssertionConcern() }
+let fixtureAssertionConcern = () => {
+  return new AssertionConcern()
+}
 
 let fShouldThrowBob = (f, ...args) => {
   try {
@@ -134,9 +136,9 @@ describe("AssertionConcern", function() {
   it("Should throw an error for unequal objects", function() {
     let fas = fixtureAssertionConcern()
 
-    fShouldThrowBob(fas.assertArgumentEquals,
-      {},
-      { "bob": "abc" },
+    fShouldThrowBob(fas.assertArgumentEquals, {}, {
+        "bob": "abc"
+      },
       "bob"
     ).should.be.true
   })
@@ -145,8 +147,7 @@ describe("AssertionConcern", function() {
     let fas = fixtureAssertionConcern()
 
     fShouldThrowBob(fas.assertArgumentNotEquals, {}, {}, "bob").should.be.true
-    fShouldThrowBob(fas.assertArgumentNotEquals,
-      {
+    fShouldThrowBob(fas.assertArgumentNotEquals, {
         "bob": "abc"
       }, {
         "bob": "abc"
@@ -160,9 +161,9 @@ describe("AssertionConcern", function() {
   it("Should not throw an error for unequal objects", function() {
     let fas = fixtureAssertionConcern()
 
-    fas.assertArgumentNotEquals(
-      {},
-      { "bob": "abc" },
+    fas.assertArgumentNotEquals({}, {
+        "bob": "abc"
+      },
       "bob"
     )
   })

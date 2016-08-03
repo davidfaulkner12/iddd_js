@@ -1,8 +1,10 @@
 const chai = require("chai")
 const should = chai.should()
 
-const User = require("../../domain/user.js")
-const DomainEventPublisher = require("../../common/domain/DomainEventPublisher.js")
+const _ = require("underscore")
+
+const User = require("../../domain/user")
+const DomainEventPublisher = require("../../common/domain/DomainEventPublisher")
 
 const {
   Enablement,
@@ -11,11 +13,9 @@ const {
   EmailAddress,
   PostalAddress,
   Telephone
-} = require("../../domain/identity/IdentityValueObjects.js")
+} = require("../../domain/identity/IdentityValueObjects")
 
-const fixture = require("./IdentityAccessFixtures.js")
-
-const _ = require("underscore")
+const fixture = require("./IdentityAccessFixtures")
 
 describe("User", function() {
 
@@ -28,7 +28,6 @@ describe("User", function() {
   })
 
   it("Should be enabled", function() {
-    // TODO!
     let user = fixture.userAggregate()
 
     user.enabled.should.be.true

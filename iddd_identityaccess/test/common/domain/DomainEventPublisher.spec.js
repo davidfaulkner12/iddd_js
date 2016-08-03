@@ -1,7 +1,7 @@
-let chai = require("chai")
-let should = chai.should()
+const chai = require("chai")
+const should = chai.should()
 
-let DomainEventPublisher = require("../../../common/domain/DomainEventPublisher.js")
+const DomainEventPublisher = require("../../../common/domain/DomainEventPublisher")
 
 describe("DomainEventPublisher", function() {
 
@@ -26,18 +26,21 @@ describe("DomainEventPublisher", function() {
   // Now we get to the tests in the thing
   it("Should publish events when publish is called", function(done) {
     DomainEventPublisher.instance().subscribe("TestableDomainEvent",
-        aDomainEvent => {
-            aDomainEvent.id.should.equal(100)
-            "test".should.equal(aDomainEvent.name)
-            done()
-        }
+      aDomainEvent => {
+        aDomainEvent.id.should.equal(100)
+        "test".should.equal(aDomainEvent.name)
+        done()
+      }
     )
 
-    DomainEventPublisher.instance().publish("TestableDomainEvent", {id: 100, name: "test"})
+    DomainEventPublisher.instance().publish("TestableDomainEvent", {
+      id: 100,
+      name: "test"
+    })
   })
 
-// New tests for functionality not present in the IDDD samples
-it("Should publish everything in a collection", function(done) {
+  // New tests for functionality not present in the IDDD samples
+  it("Should publish everything in a collection", function(done) {
     let count = 0
 
     DomainEventPublisher.subscribe("TestableDomainEvent",
@@ -54,8 +57,14 @@ it("Should publish everything in a collection", function(done) {
       })
 
     DomainEventPublisher.publishAll([
-      ["TestableDomainEvent", {id: 100, name: "event 1"}],
-      ["TestableDomainEvent", {id: 200, name: "event 2"}]
+      ["TestableDomainEvent", {
+        id: 100,
+        name: "event 1"
+      }],
+      ["TestableDomainEvent", {
+        id: 200,
+        name: "event 2"
+      }]
     ])
   })
 

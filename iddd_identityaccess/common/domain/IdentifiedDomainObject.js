@@ -2,10 +2,10 @@ const AssertionConcern = require("../AssertionConcern")
 
 class IdentifiedDomainObject extends AssertionConcern {
 
-    constructor() {
-        super()
-        this.id = -1
-    }
+  constructor() {
+    super()
+    this.id = -1
+  }
 
 }
 

@@ -1,9 +1,9 @@
-let chai = require("chai")
-let should = chai.should()
+const chai = require("chai")
+const should = chai.should()
 
-let uuid = require("uuid")
+const uuid = require("uuid")
 
-let TenantId = require("../../../domain/identity/TenantId.js")
+const TenantId = require("../../../domain/identity/TenantId")
 
 const FIRST_NAME = "Zoe";
 const LAST_NAME = "Doe";

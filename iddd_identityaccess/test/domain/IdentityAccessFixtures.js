@@ -1,6 +1,14 @@
-const { ContactInformation, EmailAddress, PostalAddress, Telephone, TenantId, Enablement, FullName } = require("../../domain/identity/IdentityValueObjects.js")
+const {
+  ContactInformation,
+  EmailAddress,
+  PostalAddress,
+  Telephone,
+  TenantId,
+  Enablement,
+  FullName
+} = require("../../domain/identity/IdentityValueObjects")
 const Person = require("../../domain/identity/Person")
-const User = require("../../domain/user.js")
+const User = require("../../domain/user")
 const uuid = require("uuid")
 
 let fixture = {}
@@ -33,15 +41,15 @@ fixture.dayAfterTomorrow = function() {
 fixture.contactInformation = function() {
   let contactInformation =
     new ContactInformation(
-            new EmailAddress(USER_EMAIL_ADDRESS),
-            new PostalAddress(
-                    "123 Pearl Street",
-                    "Boulder",
-                    "CO",
-                    "80301",
-                    "US"),
-            new Telephone("303-555-1210"),
-            new Telephone("303-555-1212"));
+      new EmailAddress(USER_EMAIL_ADDRESS),
+      new PostalAddress(
+        "123 Pearl Street",
+        "Boulder",
+        "CO",
+        "80301",
+        "US"),
+      new Telephone("303-555-1210"),
+      new Telephone("303-555-1212"));
   return contactInformation
 }
 
@@ -62,27 +70,27 @@ fixture.tenantAggregate = function() {
 
 fixture.personEntity = function(aTenant) {
 
-        let person =
-            new Person(
-                    aTenant.tenantId,
-                    new FullName("John", "Doe"),
-                    fixture.contactInformation());
+  let person =
+    new Person(
+      aTenant.tenantId,
+      new FullName("John", "Doe"),
+      fixture.contactInformation());
 
-        return person;
-    }
+  return person;
+}
 
 fixture.userAggregate = function() {
 
-   let user = new User(
-                    fixture.tenantAggregate().tenantId,
-                    fixture.USERNAME,
-                    fixture.PASSWORD,
-                    new Enablement(true, null, null),
-                    fixture.personEntity(fixture.tenantAggregate())
-                  )
+  let user = new User(
+    fixture.tenantAggregate().tenantId,
+    fixture.USERNAME,
+    fixture.PASSWORD,
+    new Enablement(true, null, null),
+    fixture.personEntity(fixture.tenantAggregate())
+  )
 
 
-    return user;
+  return user;
 }
 
 module.exports = fixture

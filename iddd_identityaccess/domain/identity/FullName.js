@@ -1,6 +1,6 @@
-let _ = require("underscore")
+const _ = require("underscore")
 
-let AssertionConcern = require("../../common/AssertionConcern.js")
+const AssertionConcern = require("../../common/AssertionConcern")
 
 class FullName extends AssertionConcern {
   constructor() {
@@ -19,41 +19,41 @@ class FullName extends AssertionConcern {
   }
 
   asFormattedName() {
-      return this.firstName + " " + this.lastName
+    return this.firstName + " " + this.lastName
   }
 
   withChangedFirstName(aFirstName) {
-      return new FullName(aFirstName, this.lastName)
+    return new FullName(aFirstName, this.lastName)
   }
 
   withChangedLastName(aLastName) {
-      return new FullName(this.firstName, aLastName)
+    return new FullName(this.firstName, aLastName)
   }
 
   set firstName(aFirstName) {
-      this.assertArgumentNotEmpty(aFirstName, "First name is required.");
-      this.assertArgumentLength(aFirstName, 1, 50, "First name must be 50 characters or less.");
-      this.assertArgumentTrue(
-              /^[A-Z][a-z]*/.test(aFirstName),
-              "First name must be at least one character in length, starting with a capital letter.");
-      this._firstName = aFirstName;
+    this.assertArgumentNotEmpty(aFirstName, "First name is required.");
+    this.assertArgumentLength(aFirstName, 1, 50, "First name must be 50 characters or less.");
+    this.assertArgumentTrue(
+      /^[A-Z][a-z]*/.test(aFirstName),
+      "First name must be at least one character in length, starting with a capital letter.");
+    this._firstName = aFirstName;
   }
 
   set lastName(aLastName) {
-      this.assertArgumentNotEmpty(aLastName, "The last name is required.");
-      this.assertArgumentLength(aLastName, 1, 50, "The last name must be 50 characters or less.");
-        this.assertArgumentTrue(
-              /^[a-zA-Z'][ a-zA-Z'-]*[a-zA-Z']?/.test(aLastName),
-              "Last name must be at least one character in length.");
+    this.assertArgumentNotEmpty(aLastName, "The last name is required.");
+    this.assertArgumentLength(aLastName, 1, 50, "The last name must be 50 characters or less.");
+    this.assertArgumentTrue(
+      /^[a-zA-Z'][ a-zA-Z'-]*[a-zA-Z']?/.test(aLastName),
+      "Last name must be at least one character in length.");
 
-      this._lastName = aLastName;
+    this._lastName = aLastName;
   }
 
-  get firstName () {
+  get firstName() {
     return this._firstName
   }
 
-  get lastName () {
+  get lastName() {
     return this._lastName
   }
 

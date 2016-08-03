@@ -1,5 +1,3 @@
-// Node.js goodness
-
 const ConcurrencySafeEntity = require("../common/domain/ConcurrencySafeEntity")
 const DomainEventPublisher = require("../common/domain/DomainEventPublisher")
 const {
@@ -10,7 +8,7 @@ const {
   PostalAddress,
   Telephone,
   TenantId
-} = require("./identity/IdentityValueObjects.js")
+} = require("./identity/IdentityValueObjects")
 
 // TODO
 const crypto = require('crypto')

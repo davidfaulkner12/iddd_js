@@ -5,7 +5,7 @@ const {
   FullName,
   TenantId,
   User
-} = require("./IdentityValueObjects.js")
+} = require("./IdentityValueObjects")
 
 class Person extends ConcurrencySafeEntity {
   constructor(

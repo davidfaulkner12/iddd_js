@@ -1,5 +1,4 @@
 const _ = require("underscore")
-
 const EventEmitter = require('events')
 
 
@@ -25,6 +24,8 @@ module.exports = {
   },
 
   publishAll(eventArray) {
-    _.map(eventArray, event => { this.publish(event[0], event[1]) })
+    _.map(eventArray, event => {
+      this.publish(event[0], event[1])
+    })
   }
 }

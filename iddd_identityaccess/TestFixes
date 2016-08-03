@@ -1,9 +1,9 @@
 let chai = require("chai")
 let should = chai.should()
 
-let Enablement = require("../../../domain/identity/Enablement.js")
+let Enablement = require("../../../domain/identity/Enablement")
 
-let fixture = require("../IdentityAccessFixtures.js")
+let fixture = require("../IdentityAccessFixtures")
 
 describe("xxxx", function() {
 

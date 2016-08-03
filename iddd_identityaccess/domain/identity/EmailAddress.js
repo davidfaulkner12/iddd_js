@@ -1,4 +1,4 @@
-let AssertionConcern = require("../../common/AssertionConcern.js")
+const AssertionConcern = require("../../common/AssertionConcern")
 
 class EmailAddress extends AssertionConcern {
   constructor(anAddress) {
@@ -8,7 +8,7 @@ class EmailAddress extends AssertionConcern {
     // TODO Copy Constructor
   }
 
-  get address () {
+  get address() {
     return this._address
   }
 
@@ -17,8 +17,8 @@ class EmailAddress extends AssertionConcern {
     this.assertArgumentLength(anAddress, 1, 100, "Email address must be 100 characters or less.");
     this.assertArgumentTrue(
       // Note: I redid the regex here
-            /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/.test(anAddress),
-            "Email address format is invalid.");
+      /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/.test(anAddress),
+      "Email address format is invalid.");
 
     this._address = anAddress;
   }

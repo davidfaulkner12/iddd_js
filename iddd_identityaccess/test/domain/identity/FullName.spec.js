@@ -1,7 +1,7 @@
 let chai = require("chai")
 let should = chai.should()
 
-let FullName = require("../../../domain/identity/FullName.js")
+let FullName = require("../../../domain/identity/FullName")
 
 const FIRST_NAME = "Zoe";
 const LAST_NAME = "Doe";
