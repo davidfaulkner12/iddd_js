@@ -1,9 +1,9 @@
-let chai = require("chai")
-let should = chai.should()
+const chai = require("chai")
+const should = chai.should()
 
-let Enablement = require("../../../domain/identity/Enablement")
+const Enablement = require("../../../domain/identity/Enablement")
 
-let fixture = require("../IdentityAccessFixtures")
+const fixture = require("../IdentityAccessFixtures")
 
 describe("xxxx", function() {
 

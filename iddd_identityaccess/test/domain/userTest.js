@@ -36,7 +36,7 @@ describe("User", function() {
   it("Should allow a user to disabled", function(done) {
     let user = fixture.userAggregate()
 
-    DomainEventPublisher.subscribe( /*...*/ null, (aDomainEvent) => {
+    DomainEventPublisher.subscribe( "UserEnablementChanged", (aDomainEvent) => {
       aDomainEvent.username.should.equal(user.username)
       done()
     })
@@ -49,7 +49,7 @@ describe("User", function() {
   it("Should allow a user to be disabled with start and end dates", function(done) {
     let user = fixture.userAggregate()
 
-    DomainEventPublisher.subscribe( /*...*/ null, (aDomainEvent) => {
+    DomainEventPublisher.subscribe("UserEnablementChanged", (aDomainEvent) => {
       aDomainEvent.username.should.equal(user.username)
       done()
     })
@@ -62,7 +62,7 @@ describe("User", function() {
   it("Should allow a user to be disabled with outside start and end dates", function(done) {
     let user = fixture.userAggregate()
 
-    DomainEventPublisher.subscribe( /*...*/ null, (aDomainEvent) => {
+    DomainEventPublisher.subscribe("UserEnablementChanged", (aDomainEvent) => {
       aDomainEvent.username.should.equal(user.username)
       done()
     })
@@ -77,7 +77,7 @@ describe("User", function() {
 
     let failure = false
 
-    DomainEventPublisher.subscribe( /*...*/ null, (aDomainEvent) => {
+    DomainEventPublisher.subscribe("UserEnablementChanged", (aDomainEvent) => {
       aDomainEvent.username.should.equal(user.username)
       done(new Error("Should never have gotten here"))
     })
@@ -111,7 +111,7 @@ describe("User", function() {
   it("Should allow a user to change their password", function(done) {
     let user = fixture.userAggregate()
 
-    DomainEventPublisher.subscribe( /*...*/ null, (aDomainEvent) => {
+    DomainEventPublisher.subscribe("UserPasswordChanged", (aDomainEvent) => {
       aDomainEvent.username.should.equal(user.username)
       aDomainEvent.tenantId.should.equal(user.tenantId)
       done()
@@ -153,7 +153,7 @@ describe("User", function() {
   it("Should allow user personal contact information to change", function(done) {
     let user = fixture.userAggregate()
 
-    DomainEventPublisher.subscribe( /*...*/ null, (aDomainEvent) => {
+    DomainEventPublisher.subscribe("PersonContactInformationChanged", (aDomainEvent) => {
       aDomainEvent.username.should.equal(user.username)
       done()
     })
@@ -178,7 +178,7 @@ describe("User", function() {
   it("Should allow for a name change", function(done) {
     let user = fixture.userAggregate()
 
-    DomainEventPublisher.subscribe( /*...*/ null, (aDomainEvent) => {
+    DomainEventPublisher.subscribe("PersonNameChanged", (aDomainEvent) => {
       aDomainEvent.username.should.equal(user.username)
       aDomainEvent.name.firstName.should.equal("Joe")
       aDomainEvent.name.lastName.should.equal("Smith")

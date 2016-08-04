@@ -16,11 +16,11 @@ module.exports = {
   },
 
   subscribe(evtName, callback) {
-    this._ee.on("evtName", callback)
+    this._ee.on(evtName, callback)
   },
 
   publish(evtName, evtData) {
-    this._ee.emit("evtName", evtData)
+    this._ee.emit(evtName, evtData)
   },
 
   publishAll(eventArray) {

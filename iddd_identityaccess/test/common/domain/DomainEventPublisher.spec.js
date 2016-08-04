@@ -68,4 +68,29 @@ describe("DomainEventPublisher", function() {
     ])
   })
 
+  it("Should have multiple listeners", function(done) {
+    let p1 = new Promise(
+      (resolve, reject) => {
+        DomainEventPublisher.subscribe("TestableDomainEvent",
+        aDomainEvent => {
+          resolve()
+        })
+      }
+    )
+
+    let p2 = new Promise(
+      (resolve, reject) => {
+        DomainEventPublisher.subscribe("TestableDomainEvent2",
+        aDomainEvent => {
+          resolve()
+        })
+      }
+    )
+
+    DomainEventPublisher.publish("TestableDomainEvent")
+    DomainEventPublisher.publish("TestableDomainEvent2")
+
+    Promise.all([p1, p2]).then(() => { done() })
+  })
+
 })

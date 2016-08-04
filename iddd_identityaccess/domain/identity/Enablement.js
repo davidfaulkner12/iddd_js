@@ -48,6 +48,10 @@ class Enablement extends AssertionConcern {
     return timeExpired;
   }
 
+  static indefiniteEnablement() {
+      return new Enablement(true, null, null);
+  }
+
 }
 
 module.exports = Enablement

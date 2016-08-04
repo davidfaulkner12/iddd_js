@@ -22,7 +22,6 @@ class Person extends ConcurrencySafeEntity {
   }
 
   changeContactInformation(aContactInformation) {
-    console.log(aContactInformation)
     this.contactInformation = aContactInformation
 
     DomainEventPublisher

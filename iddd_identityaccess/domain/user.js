@@ -10,6 +10,9 @@ const {
   TenantId
 } = require("./identity/IdentityValueObjects")
 
+const GroupMember = require("./identity/GroupMember")
+const GroupMemberType = require("./identity/GroupMemberType")
+
 // TODO
 const crypto = require('crypto')
 
@@ -163,16 +166,13 @@ class User extends ConcurrencySafeEntity {
 
 
   toGroupMember() {
-    /*
-      GroupMember groupMember =
-          new GroupMember(
-                  this.tenantId(),
-                  this.username(),
-                  GroupMemberType.User);
+    let groupMember =
+      new GroupMember(
+        this.tenantId,
+        this.username,
+        GroupMemberType.USER);
 
-      return groupMember;
-      */
-    return null
+    return groupMember
   }
 
 
