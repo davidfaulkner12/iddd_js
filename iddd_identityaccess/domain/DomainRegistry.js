@@ -1,3 +1,5 @@
+const PasswordService = require("./identity/PasswordService")
+
 const TenantRepository = require("./identity/TenantRepository")
 const UserRepository = require("./identity/UserRepository")
 const RoleRepository = require("./access/RoleRepository")
@@ -9,11 +11,7 @@ let tenantRepository = new TenantRepository()
 let userRepository = new UserRepository()
 let roleRepository = new RoleRepository()
 
-let passwordService = {
-  generateStrongPassword() {
-    return "bob"
-  }
-}
+let passwordService = new PasswordService()
 
 module.exports.passwordService = passwordService
 

@@ -5,9 +5,12 @@ class InMemoryRepository {
     this._repository = {}
   }
 
+  get repository() {
+    return this._repository
+  }
+
   add(anEntity) {
     let key = this.keyOf(anEntity)
-
     if (_.has(this._repository, key)) {
       throw new Error("IllegalState: Duplicate key.");
     }
