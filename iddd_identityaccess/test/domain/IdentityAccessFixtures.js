@@ -66,6 +66,8 @@ fixture.TENANT_NAME = "Test Tenant"
 fixture.USERNAME = "jdoe"
 fixture.USERNAME2 = "zdoe"
 
+fixture.ROLE_NAME = "Test Role"
+
 let tempTenant = null
 
 fixture.tenantAggregate = function() {
@@ -164,6 +166,11 @@ fixture.registrationInvitationEntity = function(aTenant) {
 
   return registrationInvitation
 
+}
+
+fixture.roleAggregate = function(aTenant) {
+  return fixture.tenantAggregate()
+                   .provisionRole(fixture.ROLE_NAME, "A test role.", true);
 }
 
 fixture.clean = function() {

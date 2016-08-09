@@ -65,7 +65,7 @@ class Group extends ConcurrencySafeEntity {
     this.assertArgumentEquals(this.tenantId, aUser.tenantId, "Wrong tenant for this group.");
     this.assertArgumentTrue(aUser.enabled, "User is not enabled.");
 
-    let isMember = _.find(this.groupMembers, (member) => {
+    let isMember = !!_.find(this.groupMembers, (member) => {
       return _.isEqual(member, aUser.toGroupMember())
     })
 
