@@ -7,6 +7,10 @@ const ApplicationServiceRegistry = require("../../application/ApplicationService
 // TODO Maybe this doesn't work anymore?
 const fixture = require("../domain/IdentityAccessFixtures")
 
+const {
+  AssignUserToRoleCommand
+} = require("../../application/command/Commands")
+
 describe("AccessApplicationService", function() {
 
   beforeEach(function() {
@@ -52,7 +56,7 @@ describe("AccessApplicationService", function() {
         role.name).should.be.false
 
     ApplicationServiceRegistry
-      .accessApplicationService()
+      .accessApplicationService
       .assignUserToRole(
         new AssignUserToRoleCommand(
           user.tenantId.id,
