@@ -40,6 +40,7 @@ class Group extends ConcurrencySafeEntity {
     this.assertArgumentFalse(aGroupMemberService.isMemberGroup(aGroup, this.toGroupMember()), "Group recursion.");
 
     this.groupMembers.push(aGroup.toGroupMember())
+
     if (!this.isInternalGroup()) {
       DomainEventPublisher
         .publish("GroupGroupAdded", {

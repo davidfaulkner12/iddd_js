@@ -7,9 +7,9 @@ class AddGroupToGroupCommand extends AssertionConcern {
 
       tenantId,
 
-      childGroupName,
+      parentGroupName,
 
-      parentGroupName
+      childGroupName
   ) {
     super()
 
@@ -17,24 +17,24 @@ class AddGroupToGroupCommand extends AssertionConcern {
     this.assertArgumentTrue(_.isString(tenantId), "tenantId must be a String")
     this._tenantId = tenantId
 
-    this.assertArgumentNotNull(childGroupName, "childGroupName must be provided.")
-    this.assertArgumentTrue(_.isString(childGroupName), "childGroupName must be a String")
-    this._childGroupName = childGroupName
-
     this.assertArgumentNotNull(parentGroupName, "parentGroupName must be provided.")
     this.assertArgumentTrue(_.isString(parentGroupName), "parentGroupName must be a String")
     this._parentGroupName = parentGroupName
+
+    this.assertArgumentNotNull(childGroupName, "childGroupName must be provided.")
+    this.assertArgumentTrue(_.isString(childGroupName), "childGroupName must be a String")
+    this._childGroupName = childGroupName
 
   }
 
   get tenantId() {
     return this._tenantId
   }
-  get childGroupName() {
-    return this._childGroupName
-  }
   get parentGroupName() {
     return this._parentGroupName
+  }
+  get childGroupName() {
+    return this._childGroupName
   }
 }
 

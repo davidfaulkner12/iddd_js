@@ -9,8 +9,6 @@ const User = require("../User")
 const Role = require("../access/Role")
 const Group = require("./Group")
 
-console.log(User)
-
 class Tenant extends ConcurrencySafeEntity {
   constructor(aTenantId, aName, aDescription, anActive) {
     super()
@@ -153,6 +151,30 @@ class Tenant extends ConcurrencySafeEntity {
 
     return group;
 
+  }
+
+  activate() {
+    if (!this.active) {
+
+      this.active = true
+
+      DomainEventPublisher
+        .publish("TenantActivated", {
+          tenantId: this.tenantId
+        })
+    }
+  }
+
+  deactivate() {
+    if (this.active) {
+
+      this.active = false
+
+      DomainEventPublisher
+        .publish("TenantDeactivated", {
+          tenantId: this.tenantId
+        })
+    }
   }
 
 }

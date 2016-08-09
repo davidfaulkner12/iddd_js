@@ -10,7 +10,6 @@ let args = process.argv.slice(2)
 
 let dir = args.shift()
 
-console.log(dir)
 
 // Empty out file and close it
 
@@ -24,14 +23,24 @@ _.each(args, (arg) => {
     console.log(filename + ":", data.length)
     let matches = []
     let match = null
-    let re = /\s+private (\w+) (\w+)/g
+    let bigRe = new RegExp("public " + filename + "\((.*)\)")
+    data = bigRe.exec(data)[1]
+    let re = /(\w+) (\w+)/g
       while((match = re.exec(data)) != null) {
         matches.push(match)
       }
     // Now we can transform the data
     let fields = _.map(matches, (match) => {
+
+      let name = match[2]
+      if (name.startsWith("a") && name.charAt(1).toUpperCase() == name.charAt(1)) {
+        console.log("Found one!", name)
+        let firstLetter = name.charAt(1)
+        name = firstLetter.toLowerCase() + name.slice(2)
+        console.log("Fixed it", name)
+      }
       return {
-        name: match[2],
+        name: name,
         type: match[1],
         // Need to do this to make the template simple
         isString: match[1] == "String",

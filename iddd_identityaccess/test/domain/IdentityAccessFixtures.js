@@ -170,7 +170,19 @@ fixture.registrationInvitationEntity = function(aTenant) {
 
 fixture.roleAggregate = function(aTenant) {
   return fixture.tenantAggregate()
-                   .provisionRole(fixture.ROLE_NAME, "A test role.", true);
+    .provisionRole(fixture.ROLE_NAME, "A test role.", true);
+}
+
+fixture.GROUP_NAME = "Test Group";
+
+fixture.group1Aggregate = function() {
+  return fixture.tenantAggregate()
+    .provisionGroup(fixture.GROUP_NAME + " 1", "A test group 1.");
+}
+
+fixture.group2Aggregate = function() {
+  return fixture.tenantAggregate()
+    .provisionGroup(fixture.GROUP_NAME + " 2", "A test group 2.");
 }
 
 fixture.clean = function() {
@@ -179,6 +191,7 @@ fixture.clean = function() {
   DomainRegistry.roleRepository.clean()
   DomainEventPublisher.reset()
   fixture.tenantAggregate().registrationInvitations = []
+  fixture.tenantAggregate().active = true
 }
 
 module.exports = fixture
