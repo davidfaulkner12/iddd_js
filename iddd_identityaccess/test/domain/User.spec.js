@@ -20,11 +20,11 @@ const fixture = require("./IdentityAccessFixtures")
 describe("User", function() {
 
   beforeEach(function() {
-    DomainEventPublisher.reset()
+    fixture.clean()
   })
 
   afterEach(function() {
-    DomainEventPublisher.reset()
+    fixture.clean()
   })
 
   it("Should be enabled", function() {

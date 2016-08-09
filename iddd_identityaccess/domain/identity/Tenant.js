@@ -9,6 +9,8 @@ const User = require("../User")
 const Role = require("../access/Role")
 const Group = require("./Group")
 
+console.log(User)
+
 class Tenant extends ConcurrencySafeEntity {
   constructor(aTenantId, aName, aDescription, anActive) {
     super()
@@ -92,7 +94,7 @@ class Tenant extends ConcurrencySafeEntity {
   }
 
   provisionRole(aName, aDescription, aSupportsNesting = false) {
-    this.assertStateTrue(this.active, "Tenant is not active.");
+    this.assertStateTrue(this.active, "Tenant is not active.")
 
     let role = new Role(this.tenantId, aName, aDescription, aSupportsNesting)
 

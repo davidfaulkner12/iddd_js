@@ -12,15 +12,11 @@ const _ = require("underscore")
 describe("Group", function() {
 
   beforeEach(function() {
-    DomainRegistry.groupRepository.clean()
-    DomainRegistry.userRepository.clean()
-    DomainRegistry.roleRepository.clean()
+    fixture.clean()
   })
 
   afterEach(function() {
-    DomainRegistry.groupRepository.clean()
-    DomainRegistry.userRepository.clean()
-    DomainRegistry.roleRepository.clean()
+    fixture.clean()
   })
 
   it("ProvisionGroup", function() {

@@ -8,10 +8,13 @@ const {
   FullName
 } = require("../../domain/identity/IdentityValueObjects")
 const Person = require("../../domain/identity/Person")
-const User = require("../../domain/user")
+
 const uuid = require("uuid")
 const DomainRegistry = require("../../domain/DomainRegistry")
+const User = require("../../domain/user")
 const Tenant = require("../../domain/identity/Tenant")
+
+const DomainEventPublisher = require("../../common/domain/DomainEventPublisher")
 
 let fixture = {}
 
@@ -67,20 +70,20 @@ let tempTenant = null
 
 fixture.tenantAggregate = function() {
   if (tempTenant == null) {
-            let tenantId =
-                DomainRegistry.tenantRepository.nextIdentity();
+    let tenantId =
+      DomainRegistry.tenantRepository.nextIdentity();
 
-            tempTenant =
-                new Tenant(
-                        tenantId,
-                        fixture.TENANT_NAME,
-                        fixture.TENANT_DESCRIPTION,
-                        true)
+    tempTenant =
+      new Tenant(
+        tenantId,
+        fixture.TENANT_NAME,
+        fixture.TENANT_DESCRIPTION,
+        true)
 
-            DomainRegistry.tenantRepository.add(tempTenant);
-        }
+    DomainRegistry.tenantRepository.add(tempTenant);
+  }
 
-        return tempTenant
+  return tempTenant
 }
 
 fixture.personEntity = function(aTenant) {
@@ -115,59 +118,60 @@ fixture.personEntity2 = function(aTenant) {
 }
 
 fixture.userAggregate = function() {
-  // TODO
-  let user = new User(
-    fixture.tenantAggregate().tenantId,
-    fixture.USERNAME,
-    fixture.PASSWORD,
-    new Enablement(true, null, null),
-    fixture.personEntity(fixture.tenantAggregate())
-  )
 
+  let tenant = this.tenantAggregate();
+
+  let registrationInvitation =
+    this.registrationInvitationEntity(tenant);
+
+  let user =
+    tenant.registerUser(
+      registrationInvitation.invitationId,
+      fixture.USERNAME,
+      fixture.PASSWORD,
+      new Enablement(true, null, null),
+      fixture.personEntity(tenant));
 
   return user;
+
 }
 
 fixture.userAggregate2 = function() {
-  // TODO
-  let user = new User(
-    fixture.tenantAggregate().tenantId,
-    fixture.USERNAME2,
-    fixture.PASSWORD,
-    new Enablement(true, null, null),
-    fixture.personEntity2(fixture.tenantAggregate())
-  )
 
-  return user
+  let tenant = this.tenantAggregate();
 
-  /*
-        Tenant tenant = this.tenantAggregate();
+  let registrationInvitation =
+    this.registrationInvitationEntity(tenant);
 
-        RegistrationInvitation registrationInvitation =
-            this.registrationInvitationEntity(tenant);
+  let user =
+    tenant.registerUser(
+      registrationInvitation.invitationId,
+      fixture.USERNAME2,
+      fixture.PASSWORD,
+      new Enablement(true, null, null),
+      this.personEntity2(tenant));
 
-        User user =
-            tenant.registerUser(
-                    registrationInvitation.invitationId(),
-                    FIXTURE_USERNAME2,
-                    FIXTURE_PASSWORD,
-                    new Enablement(true, null, null),
-                    this.personEntity2(tenant));
+  return user;
 
-        return user;
-
-    */
 }
 
 fixture.registrationInvitationEntity = function(aTenant) {
 
-        let registrationInvitation =
-            aTenant.offerRegistrationInvitation("Today-and-Tomorrow")
-            .startingOn(fixture.today())
-            .until(fixture.tomorrow())
+  let registrationInvitation =
+    aTenant.offerRegistrationInvitation("Today-and-Tomorrow:" + Math.random())
+    .startingOn(fixture.today())
+    .until(fixture.tomorrow())
 
-        return registrationInvitation
+  return registrationInvitation
 
-    }
+}
+
+fixture.clean = function() {
+  DomainRegistry.groupRepository.clean()
+  DomainRegistry.userRepository.clean()
+  DomainRegistry.roleRepository.clean()
+  DomainEventPublisher.reset()
+  fixture.tenantAggregate().registrationInvitations = []
+}
 
 module.exports = fixture

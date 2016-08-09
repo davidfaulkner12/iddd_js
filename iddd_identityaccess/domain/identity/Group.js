@@ -4,15 +4,10 @@ const ConcurrencySafeEntity = require("../../common/domain/ConcurrencySafeEntity
 const DomainEventPublisher = require("../../common/domain/DomainEventPublisher")
 
 const GroupMemberType = require("./GroupMemberType")
-const
-  GroupMember = require("./GroupMember")
+const GroupMember = require("./GroupMember")
 
 
 class Group extends ConcurrencySafeEntity {
-
-  get ROLE_GROUP_PREFIX() {
-    return "ROLE-INTERNAL-GROUP: "
-  }
 
   constructor(aTenantId, aName, aDescription) {
     super()
@@ -93,7 +88,7 @@ class Group extends ConcurrencySafeEntity {
     this.groupMembers = _.reject(this.groupMembers, (member) => {
       return _.isEqual(member, aGroup.toGroupMember())
     })
-    
+
     // not a nested remove, only direct member
     if (this.groupMembers.length != oldLength && !this.isInternalGroup()) {
 
@@ -130,7 +125,7 @@ class Group extends ConcurrencySafeEntity {
     if (!aName) {
       aName = this.name
     }
-    return aName.startsWith(this.ROLE_GROUP_PREFIX)
+    return aName.startsWith(Group.ROLE_GROUP_PREFIX)
   }
 
 
@@ -162,7 +157,7 @@ class Group extends ConcurrencySafeEntity {
     this.assertArgumentLength(aName, 1, 100, "Group name must be 100 characters or less.")
 
     if (this.isInternalGroup(aName)) {
-      let uuid = aName.substring(this.ROLE_GROUP_PREFIX.length)
+      let uuid = aName.substring(Group.ROLE_GROUP_PREFIX.length)
       if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(uuid)) {
         throw new Error("IllegalArgument: The id has an invalid format.")
       }
@@ -179,6 +174,9 @@ class Group extends ConcurrencySafeEntity {
 
 
 }
+
+Group.ROLE_GROUP_PREFIX = "ROLE-INTERNAL-GROUP: "
+
 module.exports = Group
 
 /*

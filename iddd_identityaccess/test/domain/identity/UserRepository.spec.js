@@ -8,11 +8,11 @@ const fixture = require("../IdentityAccessFixtures")
 describe("UserRepository", function() {
 
   beforeEach(function() {
-    DomainRegistry.userRepository.clean()
+    fixture.clean()
   })
 
   afterEach(function() {
-    DomainRegistry.userRepository.clean()
+    fixture.clean()
   })
 
   it("AddUser", function() {

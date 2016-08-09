@@ -34,6 +34,19 @@ class UserRepository extends InMemoryRepository {
       })
 
   }
+
+  userFromAuthenticCredentials(
+    aTenantId,
+    aUsername,
+    anEncryptedPassword) {
+      
+    return _.find(this.repository, (user) => {
+      return  _.isEqual(user.tenantId, aTenantId) &&
+        user.username == aUsername &&
+        user._password == anEncryptedPassword
+    })
+
+  }
 }
 
 module.exports = UserRepository

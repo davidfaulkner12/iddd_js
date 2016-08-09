@@ -8,11 +8,11 @@ const fixture = require("../IdentityAccessFixtures")
 describe("GroupRepository", function() {
 
   beforeEach(function() {
-    DomainRegistry.groupRepository.clean()
+    fixture.clean()
   })
 
   afterEach(function() {
-    DomainRegistry.groupRepository.clean()
+    fixture.clean()
   })
 
   it("RemoveGroupReferencedUser", function() {

@@ -12,9 +12,7 @@ const {
 
 const GroupMember = require("./identity/GroupMember")
 const GroupMemberType = require("./identity/GroupMemberType")
-
-// TODO
-const crypto = require('crypto')
+const DomainRegistry = require("./DomainRegistry")
 
 class User extends ConcurrencySafeEntity {
 
@@ -124,24 +122,21 @@ class User extends ConcurrencySafeEntity {
 
 
   assertPasswordNotWeak(aPlainTextPassword) {
+
     this.assertArgumentFalse(
-      //TODO
-      //DomainRegistry.passwordService().isWeak(aPlainTextPassword),
+      DomainRegistry.passwordService.isWeak(aPlainTextPassword),
       false,
       "The password must be stronger.");
+
   }
 
   asEncryptedValue(aPlainTextPassword) {
-    /*String encryptedValue =
-        DomainRegistry
-            .encryptionService()
-            .encryptedValue(aPlainTextPassword);
-    */
-    let hash = crypto.createHash('sha256')
-    hash.update(aPlainTextPassword)
-    let encryptedValue = hash.digest('hex')
 
-    return encryptedValue;
+     let encryptedValue =
+        DomainRegistry
+            .encryptionService
+            .encryptedValue(aPlainTextPassword);
+    return encryptedValue
   }
 
   assertPasswordsNotSame(aCurrentPassword, aChangedPassword) {
@@ -159,7 +154,8 @@ class User extends ConcurrencySafeEntity {
     return {
       tenantId: this.tenantId,
       username: this.username,
-      emailAddress: this.person.emailAddress.address
+      emailAddress: this.person.emailAddress.address,
+      nullDescriptor: false
     }
   }
 
@@ -217,6 +213,15 @@ class User extends ConcurrencySafeEntity {
       })
   }
 
+}
+
+User.nullDescriptorInstance = function() {
+  return {
+    tenantId: null,
+    username: null,
+    emailAddress: null,
+    nullDescriptor: true
+  }
 }
 
 module.exports = User
