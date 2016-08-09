@@ -1,5 +1,12 @@
+const _ = require("underscore")
+
 const ConcurrencySafeEntity = require("../../common/domain/ConcurrencySafeEntity")
 const DomainEventPublisher = require("../../common/domain/DomainEventPublisher")
+
+const GroupMemberType = require("./GroupMemberType")
+const
+  GroupMember = require("./GroupMember")
+
 
 class Group extends ConcurrencySafeEntity {
 
@@ -32,6 +39,92 @@ class Group extends ConcurrencySafeEntity {
   }
 
 
+  addGroup(aGroup, aGroupMemberService) {
+    this.assertArgumentNotNull(aGroup, "Group must not be null.");
+    this.assertArgumentEquals(this.tenantId, aGroup.tenantId, "Wrong tenant for this group.");
+    this.assertArgumentFalse(aGroupMemberService.isMemberGroup(aGroup, this.toGroupMember()), "Group recursion.");
+
+    this.groupMembers.push(aGroup.toGroupMember())
+    if (!this.isInternalGroup()) {
+      DomainEventPublisher
+        .publish("GroupGroupAdded", {
+          tenantId: this.tenantId,
+          name: this.name,
+          groupName: aGroup.name
+        })
+    }
+  }
+
+  toGroupMember() {
+    let groupMember =
+      new GroupMember(
+        this.tenantId,
+        this.name,
+        GroupMemberType.GROUP);
+
+    return groupMember;
+  }
+
+  isMember(aUser, aGroupMemberService) {
+    this.assertArgumentNotNull(aUser, "User must not be null.");
+    this.assertArgumentEquals(this.tenantId, aUser.tenantId, "Wrong tenant for this group.");
+    this.assertArgumentTrue(aUser.enabled, "User is not enabled.");
+
+    let isMember = _.find(this.groupMembers, (member) => {
+      return _.isEqual(member, aUser.toGroupMember())
+    })
+
+
+    if (isMember) {
+      isMember = aGroupMemberService.confirmUser(this, aUser);
+    } else {
+      isMember = aGroupMemberService.isUserInNestedGroup(this, aUser);
+    }
+
+    return isMember;
+  }
+
+  removeGroup(aGroup) {
+    this.assertArgumentNotNull(aGroup, "Group must not be null.");
+    this.assertArgumentEquals(this.tenantId, aGroup.tenantId, "Wrong tenant for this group.");
+
+    let oldLength = this.groupMembers.length
+
+    this.groupMembers = _.reject(this.groupMembers, (member) => {
+      return _.isEqual(member, aGroup.toGroupMember())
+    })
+    
+    // not a nested remove, only direct member
+    if (this.groupMembers.length != oldLength && !this.isInternalGroup()) {
+
+      DomainEventPublisher.publish("GroupGroupRemoved", {
+        tenantId: this.tenantId,
+        name: this.name,
+        groupName: aGroup.name
+      })
+    }
+  }
+
+  removeUser(aUser) {
+    this.assertArgumentNotNull(aUser, "User must not be null.");
+    this.assertArgumentEquals(this.tenantId, aUser.tenantId, "Wrong tenant for this group.");
+
+    let oldLength = this.groupMembers.length
+
+    this.groupMembers = _.reject(this.groupMembers, (member) => {
+      return _.isEqual(member, aUser.toGroupMember())
+    })
+
+    // not a nested remove, only direct member
+    if (this.groupMembers.length != oldLength && !this.isInternalGroup()) {
+
+      DomainEventPublisher.publish("GroupUserRemoved", {
+        tenantId: this.tenantId,
+        name: this.name,
+        username: aUser.username
+      })
+    }
+  }
 
   isInternalGroup(aName) {
     if (!aName) {
@@ -121,20 +214,6 @@ public class Group extends ConcurrencySafeEntity {
 
 
 
-    public void addGroup(Group aGroup, GroupMemberService aGroupMemberService) {
-        this.assertArgumentNotNull(aGroup, "Group must not be null.");
-        this.assertArgumentEquals(this.tenantId(), aGroup.tenantId(), "Wrong tenant for this group.");
-        this.assertArgumentFalse(aGroupMemberService.isMemberGroup(aGroup, this.toGroupMember()), "Group recurrsion.");
-
-        if (this.groupMembers().add(aGroup.toGroupMember()) && !this.isInternalGroup()) {
-            DomainEventPublisher
-                .instance()
-                .publish(new GroupGroupAdded(
-                        this.tenantId(),
-                        this.name(),
-                        aGroup.name()));
-        }
-    }
 
 
     public boolean isMember(User aUser, GroupMemberService aGroupMemberService) {

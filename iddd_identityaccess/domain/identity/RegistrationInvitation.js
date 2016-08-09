@@ -17,42 +17,73 @@ class RegistrationInvitation extends ConcurrencySafeEntity {
   }
 
   openEnded() {
-    this.startingOn = null
-    this.setUntil = null
+    this._startingOn = null
+    this._until = null
     return this
+  }
+
+  redefineAs() {
+    this._startingOn = null
+    this._until = null;
+    return this;
+  }
+
+  isIdentifiedBy(anInvitationIdentifier) {
+    let isIdentified = this.invitationId == anInvitationIdentifier
+    if (!isIdentified && this.description != null) {
+      isIdentified = this.description == anInvitationIdentifier
+    }
+    return isIdentified
+  }
+
+  startingOn(aDate) {
+    if (this._until != null) {
+      throw new IllegalStateException("Cannot set starting-on date after _until date.");
+    }
+
+    this._startingOn = aDate
+
+    // temporary if _until() properly follows, but
+    // prevents illegal state if _until() doesn't follow
+    this._until = new Date(aDate.getTime() + 86400000)
+
+    return this;
+  }
+
+  until(aDate) {
+    if (this._startingOn == null) {
+      throw new IllegalStateException("Cannot set until date before setting starting-on date.");
+    }
+
+    this._until = aDate
+
+    return this;
   }
 
 
   assertValidInvitationDates() {
     // either both dates must be null, or both dates must be set
-    if (this.startingOn == null && this.until == null) {; // valid
-    } else if (this.startingOn == null || this.until == null &&
-      this.startingOn != this.until) {
+    if (this._startingOn == null && this._until == null) {; // valid
+    } else if (this._startingOn == null || this._until == null &&
+      this._startingOn != this._until) {
       throw new Error("IllegalState: This is an invalid open-ended invitation.");
-    } else if (this.startingOn > this.until) {
-      throw new Error("IllegalState: The starting date and time must be before the until date and time.");
+    } else if (this._startingOn > this._until) {
+      throw new Error("IllegalState: The starting date and time must be before the _until date and time.");
     }
   }
 
-  isIdentifiedBy(anInvitationIdentifier) {
-      let isIdentified = this.invitationId == anInvitationIdentifier
-      if (!isIdentified && this.description != null) {
-          isIdentified = this.description == anInvitationIdentifier
-      }
-      return isIdentified
-  }
 
   get available() {
-      let isAvailable = false;
-      if (this.startingOn == null && this.until == null) {
-          isAvailable = true;
-      } else {
-          let time = new Date()
-          if (time >= this.startingOn && time <= this.until) {
-              isAvailable = true;
-          }
+    let isAvailable = false;
+    if (this._startingOn == null && this._until == null) {
+      isAvailable = true;
+    } else {
+      let time = new Date()
+      if (time >= this._startingOn && time <= this._until) {
+        isAvailable = true;
       }
-      return isAvailable;
+    }
+    return isAvailable;
   }
 
   get description() {
@@ -98,11 +129,11 @@ public class RegistrationInvitation extends ConcurrencySafeEntity {
 
     public boolean isAvailable() {
         boolean isAvailable = false;
-        if (this.startingOn() == null && this.until() == null) {
+        if (this._startingOn() == null && this._until() == null) {
             isAvailable = true;
         } else {
             long time = (new Date()).getTime();
-            if (time >= this.startingOn().getTime() && time <= this.until().getTime()) {
+            if (time >= this._startingOn().getTime() && time <= this._until().getTime()) {
                 isAvailable = true;
             }
         }
@@ -111,27 +142,15 @@ public class RegistrationInvitation extends ConcurrencySafeEntity {
 
 
 
-    public RegistrationInvitation openEnded() {
-        this.setStartingOn(null);
-        this.setUntil(null);
-        return this;
-    }
-
-    public RegistrationInvitation redefineAs() {
-        this.setStartingOn(null);
-        this.setUntil(null);
-        return this;
-    }
-
-    public RegistrationInvitation startingOn(Date aDate) {
-        if (this.until() != null) {
-            throw new IllegalStateException("Cannot set starting-on date after until date.");
+    public RegistrationInvitation _startingOn(Date aDate) {
+        if (this._until() != null) {
+            throw new IllegalStateException("Cannot set starting-on date after _until date.");
         }
 
         this.setStartingOn(aDate);
 
-        // temporary if until() properly follows, but
-        // prevents illegal state if until() doesn't follow
+        // temporary if _until() properly follows, but
+        // prevents illegal state if _until() doesn't follow
         this.setUntil(new Date(aDate.getTime() + 86400000));
 
         return this;
@@ -143,19 +162,10 @@ public class RegistrationInvitation extends ConcurrencySafeEntity {
                         this.tenantId(),
                         this.invitationId(),
                         this.description(),
-                        this.startingOn(),
-                        this.until());
+                        this._startingOn(),
+                        this._until());
     }
 
-    public RegistrationInvitation until(Date aDate) {
-        if (this.startingOn() == null) {
-            throw new IllegalStateException("Cannot set until date before setting starting-on date.");
-        }
-
-        this.setUntil(aDate);
-
-        return this;
-    }
 \
 }
 */

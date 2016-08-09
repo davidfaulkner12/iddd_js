@@ -7,6 +7,7 @@ const DomainEventPublisher = require("../../common/domain/DomainEventPublisher")
 const RegistrationInvitation = require("./RegistrationInvitation")
 const User = require("../User")
 const Role = require("../access/Role")
+const Group = require("./Group")
 
 class Tenant extends ConcurrencySafeEntity {
   constructor(aTenantId, aName, aDescription, anActive) {
@@ -97,13 +98,61 @@ class Tenant extends ConcurrencySafeEntity {
 
     DomainEventPublisher
       .publish("RoleProvisioned", {
-          tenantId: this.tenantId,
-          name: aName
-        })
+        tenantId: this.tenantId,
+        name: aName
+      })
 
-        return role;
-      }
+    return role;
+  }
+
+  redefineRegistrationInvitationAs(anInvitationIdentifier) {
+    this.assertStateTrue(this.active, "Tenant is not active.");
+
+    let invitation =
+      this.invitation(anInvitationIdentifier);
+
+    if (invitation != null) {
+      invitation.redefineAs().openEnded()
+    }
+
+    return invitation;
+  }
+
+  allAvailableRegistrationInvitations() {
+    this.assertStateTrue(this.active, "Tenant is not active.")
+
+    return this._allRegistrationInvitationsFor(true)
+  }
+
+  allUnavailableRegistrationInvitations() {
+    this.assertStateTrue(this.active, "Tenant is not active.")
+
+    return this._allRegistrationInvitationsFor(false)
+  }
+
+  _allRegistrationInvitationsFor(isAvailable) {
+
+    return _.filter(this.registrationInvitations, (invitation) => {
+      return isAvailable == invitation.available
+    })
+  }
+
+  provisionGroup(aName, aDescription) {
+    this.assertStateTrue(this.active, "Tenant is not active.")
+
+    let group = new Group(this.tenantId, aName, aDescription)
+
+    DomainEventPublisher
+      .instance()
+      .publish("GroupProvisioned", {
+        tenantId: this.tenantId,
+        name: aName
+      })
+
+    return group;
 
   }
 
-  module.exports = Tenant
+}
+
+module.exports = Tenant

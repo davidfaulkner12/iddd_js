@@ -10,6 +10,8 @@ const {
 const Person = require("../../domain/identity/Person")
 const User = require("../../domain/user")
 const uuid = require("uuid")
+const DomainRegistry = require("../../domain/DomainRegistry")
+const Tenant = require("../../domain/identity/Tenant")
 
 let fixture = {}
 
@@ -61,13 +63,24 @@ fixture.TENANT_NAME = "Test Tenant"
 fixture.USERNAME = "jdoe"
 fixture.USERNAME2 = "zdoe"
 
-let tempTenant = {
-  tenantId: new TenantId(uuid.v4())
-}
+let tempTenant = null
 
 fixture.tenantAggregate = function() {
-  // TODO
-  return tempTenant
+  if (tempTenant == null) {
+            let tenantId =
+                DomainRegistry.tenantRepository.nextIdentity();
+
+            tempTenant =
+                new Tenant(
+                        tenantId,
+                        fixture.TENANT_NAME,
+                        fixture.TENANT_DESCRIPTION,
+                        true)
+
+            DomainRegistry.tenantRepository.add(tempTenant);
+        }
+
+        return tempTenant
 }
 
 fixture.personEntity = function(aTenant) {
@@ -145,5 +158,16 @@ fixture.userAggregate2 = function() {
 
     */
 }
+
+fixture.registrationInvitationEntity = function(aTenant) {
+
+        let registrationInvitation =
+            aTenant.offerRegistrationInvitation("Today-and-Tomorrow")
+            .startingOn(fixture.today())
+            .until(fixture.tomorrow())
+
+        return registrationInvitation
+
+    }
 
 module.exports = fixture
