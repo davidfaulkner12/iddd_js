@@ -47,7 +47,7 @@ class AssertionConcern {
 
 
   assertArgumentNotNull(anObject, aMessage) {
-    if (anObject === null) {
+    if (anObject === null || anObject == undefined) {
       throw new Error("IllegalArgument: " + aMessage);
     }
   }

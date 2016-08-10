@@ -1,0 +1,5 @@
+module.exports.NotificationLogInfo = require("./NotificationLogInfo")
+module.exports.NotificationLogId = require("./NotificationLogId")
+module.exports.Notification = require("./Notification")
+module.exports.NotificationLog = require("./NotificationLog")
+module.exports.NotificationLogFactory = require("./NotificationLogFactory")
