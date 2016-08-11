@@ -2,15 +2,15 @@ const should = require("chai").should()
 const rest = require("restling")
 
 const DomainRegistry = require("../../domain/DomainRegistry")
-const groupRoutes = require("../../resource/GroupRoutes")
+const tenantRoutes = require("../../resource/TenantRoutes")
 
 const resourceFixture = require("./ResourceFixture")
 const fixture = require("../domain/IdentityAccessFixtures")
 
-describe("GroupResource", function() {
+describe("TenantResource", function() {
 
   before(function(done) {
-    resourceFixture.startWithRoutes(groupRoutes,done)
+    resourceFixture.startWithRoutes(tenantRoutes,done)
   })
 
   after(function(done) {
@@ -25,21 +25,19 @@ describe("GroupResource", function() {
     fixture.clean()
   })
 
-  it("Should get group", function(done) {
-    let group = fixture.group1Aggregate()
-    DomainRegistry.groupRepository.add(group)
+  it("Should get tenant", function(done) {
+    let tenant = fixture.tenantAggregate()
 
-    let tenantId = group.tenantId.id
-    let groupName = group.name
+    let tenantId = tenant.tenantId.id
 
-    let url = `${resourceFixture.baseUrl}/tenants/${encodeURIComponent(tenantId)}/groups/${encodeURIComponent(groupName)}`
+    let url = `${resourceFixture.baseUrl}/tenants/${encodeURIComponent(tenantId)}`
 
     console.log(">>> GET: " + url)
 
     rest.get(url)
       .then(response => {
+        console.log(response.data)
         tenantId.should.equal(response.data.tenantId.id)
-        groupName.should.equal(response.data.name)
       }).then(done, err => done(err))
 
   })
