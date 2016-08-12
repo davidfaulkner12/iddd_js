@@ -1,5 +1,5 @@
 const DomainRegistry = require("../domain/DomainRegistry")
-
+const DomainEventPublisher = require("../common/domain/DomainEventPublisher")
 const EventStore = require("../common/event/EventStore")
 
 
@@ -9,6 +9,10 @@ const NotificationApplicationService = require("./NotificationApplicationService
 
 
 let eventStore = new EventStore()
+
+DomainEventPublisher.subscribe("*", (evt, evtName) => {
+  eventStore.append(evtName, evt)
+})
 
 // TODO Not even going to create a fake module for this mock
 let notificationPublisher = {
@@ -32,4 +36,6 @@ module.exports.identityApplicationService = new IdentityApplicationService(
   DomainRegistry.userRepository
 )
 
-module.exports.notificationApplicationService = new NotificationApplicationService(eventStore, notificationPublisher)
+let notificationApplicationService = new NotificationApplicationService(eventStore, notificationPublisher)
+
+module.exports.notificationApplicationService = notificationApplicationService

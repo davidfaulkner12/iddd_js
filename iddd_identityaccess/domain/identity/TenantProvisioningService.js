@@ -21,7 +21,6 @@ class TenantProvisioningService {
     aPrimaryTelephone,
     aSecondaryTelephone) {
 
-
     let tenant = new Tenant(
         this._tenantRepository.nextIdentity(),
         aTenantName,

@@ -7,6 +7,7 @@ const {
   FullName,
   Enablement
 } = require("../domain/identity/IdentityValueObjects")
+const Person = require("../domain/identity/Person")
 
 class IdentityApplicationService {
 
@@ -220,9 +221,7 @@ class IdentityApplicationService {
 
 
   provisionTenant(aCommand) {
-
-    return
-    this.tenantProvisioningService.provisionTenant(
+    return this.tenantProvisioningService.provisionTenant(
       aCommand.tenantName,
       aCommand.tenantDescription,
       new FullName(
@@ -249,7 +248,7 @@ class IdentityApplicationService {
         aCommand.username,
         aCommand.password,
         new Enablement(
-          aCommand.isEnabled(),
+          aCommand.enabled,
           aCommand.StartDate,
           aCommand.EndDate),
         new Person(

@@ -72,25 +72,51 @@ describe("DomainEventPublisher", function() {
     let p1 = new Promise(
       (resolve, reject) => {
         DomainEventPublisher.subscribe("TestableDomainEvent",
-        aDomainEvent => {
-          resolve()
-        })
+          aDomainEvent => {
+            resolve()
+          })
       }
     )
 
     let p2 = new Promise(
       (resolve, reject) => {
         DomainEventPublisher.subscribe("TestableDomainEvent2",
-        aDomainEvent => {
-          resolve()
-        })
+          aDomainEvent => {
+            resolve()
+          })
       }
     )
 
-    DomainEventPublisher.publish("TestableDomainEvent")
-    DomainEventPublisher.publish("TestableDomainEvent2")
+    DomainEventPublisher.publish("TestableDomainEvent", {})
+    DomainEventPublisher.publish("TestableDomainEvent2", {})
 
-    Promise.all([p1, p2]).then(() => { done() })
+    Promise.all([p1, p2]).then(() => {
+      done()
+    })
+  })
+
+  it("Should allow for a global subscription", function(done) {
+    let numEvents = 0
+
+    let callback = (aDomainEvent, aDomainEventName) => {
+      if (numEvents == 0) {
+        aDomainEventName.should.equal("TestableDomainEvent")
+        numEvents++
+      } else if (numEvents == 1) {
+        aDomainEventName.should.equal("TestableDomainEvent2")
+        done()
+      } else {
+        done("Should never get here")
+      }
+    }
+
+    DomainEventPublisher.subscribe("*", callback)
+
+    DomainEventPublisher.publish("TestableDomainEvent", {})
+    DomainEventPublisher.publish("TestableDomainEvent2", {})
+
+    DomainEventPublisher._ee.removeListener("*", callback)
+
   })
 
 })

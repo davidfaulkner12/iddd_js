@@ -69,12 +69,10 @@ class RegisterUserCommand extends AssertionConcern {
     this.assertArgumentTrue(_.isBoolean(enabled), "enabled must be a boolean")
     this._enabled = enabled
 
-    this.assertArgumentNotNull(startDate, "startDate must be provided.")
-    this.assertArgumentTrue(_.isDate(startDate), "startDate must be a Date")
+    this.assertArgumentTrue(startDate == null || _.isDate(startDate), "startDate must be a Date")
     this._startDate = startDate
 
-    this.assertArgumentNotNull(endDate, "endDate must be provided.")
-    this.assertArgumentTrue(_.isDate(endDate), "endDate must be a Date")
+    this.assertArgumentTrue(endDate == null || _.isDate(endDate), "endDate must be a Date")
     this._endDate = endDate
 
     this.assertArgumentNotNull(emailAddress, "emailAddress must be provided.")

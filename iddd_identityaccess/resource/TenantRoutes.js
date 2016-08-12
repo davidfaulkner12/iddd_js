@@ -7,8 +7,6 @@ const getTenant = (request, reply) => {
 
   let aTenantId = request.params.tenantId
 
-  console.log("Inside handler for tenant", aTenantId)
-
   let tenant =
           ApplicationServiceRegistry.identityApplicationService
               .tenant(aTenantId)
