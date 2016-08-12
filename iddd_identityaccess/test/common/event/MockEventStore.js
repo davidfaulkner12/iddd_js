@@ -1,4 +1,6 @@
-const EventStore = require("../../../common/event/EventStore")
+const configuration = require("../../../common/ConfigurationLoader")
+
+const EventStore = configuration.objects.eventStore
 
 class MockEventStore extends EventStore {
 

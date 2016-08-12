@@ -1,12 +1,13 @@
+const configuration = require("../common/ConfigurationLoader")
+
 const DomainRegistry = require("../domain/DomainRegistry")
 const DomainEventPublisher = require("../common/domain/DomainEventPublisher")
-const EventStore = require("../common/event/EventStore")
 
+const EventStore = configuration.objects.eventStore
 
 const AccessApplicationService = require("./AccessApplicationService")
 const IdentityApplicationService = require("./IdentityApplicationService")
 const NotificationApplicationService = require("./NotificationApplicationService")
-
 
 let eventStore = new EventStore()
 

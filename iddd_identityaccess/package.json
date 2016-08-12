@@ -4,7 +4,7 @@
   "description": "JS port of iddd identity access",
   "main": "start.js",
   "scripts": {
-    "test": "mocha --recursive"
+    "test": "NODE_ENV=test mocha --recursive"
   },
   "author": "David Wang-Faulkner (david@wangfaulkner.com)",
   "license": "ISC",

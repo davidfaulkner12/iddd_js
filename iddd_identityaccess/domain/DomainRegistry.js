@@ -1,10 +1,12 @@
+const configuration = require("../common/ConfigurationLoader")
+
 const PasswordService = require("./identity/PasswordService")
 const EncryptionService = require("./identity/EncryptionService")
 
-const TenantRepository = require("./identity/TenantRepository")
-const UserRepository = require("./identity/UserRepository")
-const RoleRepository = require("./access/RoleRepository")
-const GroupRepository = require("./identity/GroupRepository")
+const TenantRepository = configuration.objects.tenantRepository
+const UserRepository = configuration.objects.userRepository
+const RoleRepository = configuration.objects.roleRepository
+const GroupRepository = configuration.objects.groupRepository
 
 const encryptionService = new EncryptionService()
 

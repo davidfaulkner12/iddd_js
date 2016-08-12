@@ -2,6 +2,7 @@ const chai = require("chai")
 const should = chai.should()
 
 const MockEventStore = require("../event/MockEventStore")
+
 const {
   NotificationLogFactory,
   NotificationLogInfo,

@@ -54,3 +54,5 @@ class ContactInformation extends AssertionConcern {
 
 
 }
+
+module.exports = ContactInformation

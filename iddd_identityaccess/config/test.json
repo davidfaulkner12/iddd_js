@@ -1,0 +1,9 @@
+{
+  "objects": {
+    "eventStore": "common/event/EventStore.js",
+    "tenantRepository": "domain/identity/TenantRepository.js",
+    "userRepository": "domain/identity/UserRepository.js",
+    "roleRepository":"domain/access/RoleRepository.js",
+    "groupRepository": "domain/identity/GroupRepository.js"
+  }
+}
