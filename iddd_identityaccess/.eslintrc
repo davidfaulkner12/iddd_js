@@ -1,0 +1,6 @@
+{
+  "extends": "eslint-config-google",
+  rules: {
+    semi: ["warn", "never"]
+    }
+}

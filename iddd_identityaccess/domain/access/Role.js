@@ -1,18 +1,17 @@
 const Group = require("../identity/Group")
-const ConcurrencySafeEntity = require("../../common/domain/ConcurrencySafeEntity")
+const ConcurrencySafeEntity =
+  require("../../common/domain/ConcurrencySafeEntity")
 
 const DomainEventPublisher = require("../../common/domain/DomainEventPublisher")
-
 
 const uuid = require("uuid")
 
 class Role extends ConcurrencySafeEntity {
   constructor(
-    aTenantId,
-    aName,
-    aDescription,
-    aSupportsNesting = false) {
-
+      aTenantId,
+      aName,
+      aDescription,
+      aSupportsNesting = false) {
     super()
 
     this.description = aDescription
@@ -25,9 +24,10 @@ class Role extends ConcurrencySafeEntity {
 
   assignUser(aUser) {
     this.assertArgumentNotNull(aUser, "User must not be null.")
-    this.assertArgumentEquals(this.tenantId, aUser.tenantId, "Wrong tenant for this user.")
+    this.assertArgumentEquals(this.tenantId, aUser.tenantId,
+      "Wrong tenant for user")
 
-    this.group.addUser(aUser);
+    this.group.addUser(aUser)
 
     // NOTE: Consider what a consuming Bounded Context would
     // need to do if this event was not enriched with the
@@ -43,11 +43,10 @@ class Role extends ConcurrencySafeEntity {
       })
   }
 
-
   createInternalGroup() {
     let groupName =
       Group.ROLE_GROUP_PREFIX +
-      uuid.v4();
+      uuid.v4()
 
     this.group = new Group(
       this.tenantId,
@@ -55,13 +54,14 @@ class Role extends ConcurrencySafeEntity {
       "Role backing group for: " + this.name)
   }
 
-
   assignGroup(aGroup, aGroupMemberService) {
-    this.assertStateTrue(this.supportsNesting, "This role does not support group nesting.");
-    this.assertArgumentNotNull(aGroup, "Group must not be null.");
-    this.assertArgumentEquals(this.tenantId, aGroup.tenantId, "Wrong tenant for this group.");
+    this.assertStateTrue(this.supportsNesting,
+      "This role does not support group nesting.")
+    this.assertArgumentNotNull(aGroup, "Group must not be null.")
+    this.assertArgumentEquals(this.tenantId, aGroup.tenantId,
+      "Wrong tenant for this group.")
 
-    this.group.addGroup(aGroup, aGroupMemberService);
+    this.group.addGroup(aGroup, aGroupMemberService)
 
     DomainEventPublisher
       .publish("GroupAssignedToRole", {
@@ -71,12 +71,12 @@ class Role extends ConcurrencySafeEntity {
       })
   }
 
-
-
   unassignGroup(aGroup) {
-    this.assertStateTrue(this.supportsNesting, "This role does not support group nesting.")
+    this.assertStateTrue(this.supportsNesting,
+      "This role does not support group nesting.")
     this.assertArgumentNotNull(aGroup, "Group must not be null.")
-    this.assertArgumentEquals(this.tenantId, aGroup.tenantId, "Wrong tenant for this group.")
+    this.assertArgumentEquals(this.tenantId, aGroup.tenantId,
+      "Wrong tenant for this group.")
 
     this.group.removeGroup(aGroup)
 
@@ -90,7 +90,8 @@ class Role extends ConcurrencySafeEntity {
 
   unassignUser(aUser) {
     this.assertArgumentNotNull(aUser, "User must not be null.")
-    this.assertArgumentEquals(this.tenantId, aUser.tenantId, "Wrong tenant for this user.")
+    this.assertArgumentEquals(this.tenantId, aUser.tenantId,
+      "Wrong tenant for this user.")
 
     this.group.removeUser(aUser)
 
@@ -103,44 +104,44 @@ class Role extends ConcurrencySafeEntity {
   }
 
   isInRole(aUser, aGroupMemberService) {
-    return this.group.isMember(aUser, aGroupMemberService);
+    return this.group.isMember(aUser, aGroupMemberService)
   }
-
 
   set description(aDescription) {
-    this.assertArgumentNotEmpty(aDescription, "Role description is required.")
-    this.assertArgumentLength(aDescription, 1, 250, "Role description must be 250 characters or less.")
+    this.assertArgumentNotEmpty(aDescription,
+      "Role description is required.")
+    this.assertArgumentLength(aDescription, 1, 250,
+      "Role description must be 250 characters or less.")
 
-    this._description = aDescription;
+    this._description = aDescription
   }
-
 
   get description() {
-    return this._description;
+    return this._description
   }
 
-
   set name(aName) {
-    this.assertArgumentNotEmpty(aName, "Role name must be provided.");
-    this.assertArgumentLength(aName, 1, 250, "Role name must be 100 characters or less.");
+    this.assertArgumentNotEmpty(aName,
+      "Role name must be provided.")
+    this.assertArgumentLength(aName, 1, 250,
+      "Role name must be 100 characters or less.")
 
-    this._name = aName;
+    this._name = aName
   }
 
   get name() {
     return this._name
   }
 
-
   set tenantId(aTenantId) {
-    this.assertArgumentNotNull(aTenantId, "The tenantId is required.");
+    this.assertArgumentNotNull(aTenantId,
+      "The tenantId is required.")
 
-    this._tenantId = aTenantId;
+    this._tenantId = aTenantId
   }
 
-
   get tenantId() {
-    return this._tenantId;
+    return this._tenantId
   }
 }
 

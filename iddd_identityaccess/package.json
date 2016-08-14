@@ -10,6 +10,8 @@
   "license": "ISC",
   "devDependencies": {
     "chai": "^3.5.0",
+    "eslint": "^3.3.0",
+    "eslint-config-google": "^0.6.0",
     "handlebars": "^4.0.5",
     "mocha": "^2.5.3",
     "restling": "^0.9.1"

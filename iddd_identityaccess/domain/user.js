@@ -1,14 +1,5 @@
 const ConcurrencySafeEntity = require("../common/domain/ConcurrencySafeEntity")
 const DomainEventPublisher = require("../common/domain/DomainEventPublisher")
-const {
-  Enablement,
-  ContactInformation,
-  FullName,
-  EmailAddress,
-  PostalAddress,
-  Telephone,
-  TenantId
-} = require("./identity/IdentityValueObjects")
 
 const GroupMember = require("./identity/GroupMember")
 const GroupMemberType = require("./identity/GroupMemberType")
@@ -16,14 +7,12 @@ const DomainRegistry = require("./DomainRegistry")
 
 class User extends ConcurrencySafeEntity {
 
-
   constructor(
     aTenantId,
     aUsername,
     aPassword,
     anEnablement,
     aPerson) {
-
     super()
 
     this.enablement = anEnablement
@@ -45,97 +34,88 @@ class User extends ConcurrencySafeEntity {
   }
 
   set username(aUsername) {
-    this.assertArgumentNotEmpty(aUsername, "The username is required.");
-    this.assertArgumentLength(aUsername, 3, 250, "The username must be 3 to 250 characters.");
+    this.assertArgumentNotEmpty(aUsername, "The username is required.")
+    this.assertArgumentLength(
+      aUsername, 3, 250, "The username must be 3 to 250 characters.")
 
-    this._username = aUsername;
+    this._username = aUsername
   }
 
-
   set tenantId(aTenantId) {
-    this.assertArgumentNotNull(aTenantId, "The tenantId is required.");
+    this.assertArgumentNotNull(aTenantId, "The tenantId is required.")
 
-    this._tenantId = aTenantId;
+    this._tenantId = aTenantId
   }
 
   set password(aPassword) {
-    this._password = aPassword;
+    this._password = aPassword
   }
 
   set person(aPerson) {
-    this.assertArgumentNotNull(aPerson, "The person is required.");
+    this.assertArgumentNotNull(aPerson, "The person is required.")
 
-    this._person = aPerson;
+    this._person = aPerson
   }
-
 
   set enablement(anEnablement) {
-    this.assertArgumentNotNull(anEnablement, "The enablement is required.");
+    this.assertArgumentNotNull(anEnablement, "The enablement is required.")
 
-    this._enablement = anEnablement;
+    this._enablement = anEnablement
   }
-
 
   get enablement() {
-    return this._enablement;
+    return this._enablement
   }
-
 
   get username() {
-    return this._username;
+    return this._username
   }
-
 
   get enabled() {
     return this.enablement.isEnablementEnabled()
   }
 
   get person() {
-    return this._person;
+    return this._person
   }
 
   get tenantId() {
-    return this._tenantId;
+    return this._tenantId
   }
 
   internalAccessOnlyEncryptedPassword() {
-    return this._password;
+    return this._password
   }
-
 
   assertUsernamePasswordNotSame(aPlainTextPassword) {
     this.assertArgumentNotEquals(
       this.username,
       aPlainTextPassword,
-      "The username and password must not be the same.");
+      "The username and password must not be the same.")
   }
 
   protectPassword(aCurrentPassword, aChangedPassword) {
-    this.assertPasswordsNotSame(aCurrentPassword, aChangedPassword);
+    this.assertPasswordsNotSame(aCurrentPassword, aChangedPassword)
 
-    this.assertPasswordNotWeak(aChangedPassword);
+    this.assertPasswordNotWeak(aChangedPassword)
 
-    this.assertUsernamePasswordNotSame(aChangedPassword);
+    this.assertUsernamePasswordNotSame(aChangedPassword)
 
-    this.password = this.asEncryptedValue(aChangedPassword);
+    this.password = this.asEncryptedValue(aChangedPassword)
   }
 
-
   assertPasswordNotWeak(aPlainTextPassword) {
-
     this.assertArgumentFalse(
       DomainRegistry.passwordService.isWeak(aPlainTextPassword),
       false,
-      "The password must be stronger.");
-
+      "The password must be stronger.")
   }
 
   asEncryptedValue(aPlainTextPassword) {
-
-     let encryptedValue =
+    let encryptedValue =
         DomainRegistry
             .encryptionService
-            .encryptedValue(aPlainTextPassword);
+            .encryptedValue(aPlainTextPassword)
     return encryptedValue
   }
 
@@ -143,12 +123,8 @@ class User extends ConcurrencySafeEntity {
     this.assertArgumentNotEquals(
       aCurrentPassword,
       aChangedPassword,
-      "The password is unchanged.");
+      "The password is unchanged.")
   }
-
-
-
-
 
   get userDescriptor() {
     return {
@@ -159,19 +135,15 @@ class User extends ConcurrencySafeEntity {
     }
   }
 
-
-
   toGroupMember() {
     let groupMember =
       new GroupMember(
         this.tenantId,
         this.username,
-        GroupMemberType.USER);
+        GroupMemberType.USER)
 
     return groupMember
   }
-
-
 
   changePassword(aCurrentPassword, aChangedPassword) {
     this.assertArgumentNotEmpty(
