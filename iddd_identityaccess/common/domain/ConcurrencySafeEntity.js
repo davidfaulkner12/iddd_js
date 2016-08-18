@@ -18,9 +18,10 @@ class ConcurrencySafeEntity extends IdentifiedDomainObject {
   }
 
   failWhenConcurrencyViolation(aVersion) {
-    if (aVersion != this.concurrencyVersion) {
+    if (aVersion !== this.concurrencyVersion) {
       throw new Error(
-        "Concurrency Violation: Stale data detected. Entity was already modified.")
+        "Concurrency Violation: Stale data detected." +
+        "Entity was already modified.")
     }
   }
 }

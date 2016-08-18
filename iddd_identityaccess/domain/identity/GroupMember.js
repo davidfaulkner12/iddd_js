@@ -1,27 +1,28 @@
-const IdentifiedDomainObject = require("../../common/domain/IdentifiedDomainObject")
+const IdentifiedDomainObject =
+  require("../../common/domain/IdentifiedDomainObject")
 
 const GroupMemberType = require("./GroupMemberType")
 
 class GroupMember extends IdentifiedDomainObject {
 
   isGroup() {
-    return this.type == GroupMemberType.GROUP
+    return this.type === GroupMemberType.GROUP
   }
 
   isUser() {
-    return this.type == GroupMemberType.USER
+    return this.type === GroupMemberType.USER
   }
 
   get name() {
-    return this._name;
+    return this._name
   }
 
   get tenantId() {
-    return this._tenantId;
+    return this._tenantId
   }
 
   get type() {
-    return this._type;
+    return this._type
   }
 
   constructor(aTenantId, aName, aType) {
@@ -33,24 +34,28 @@ class GroupMember extends IdentifiedDomainObject {
   }
 
   set name(aName) {
-    this.assertArgumentNotEmpty(aName, "Member name is required.");
-    this.assertArgumentLength(aName, 1, 100, "Member name must be 100 characters or less.");
+    this.assertArgumentNotEmpty(aName, "Member name is required.")
+    this.assertArgumentLength(aName, 1, 100,
+      "Member name must be 100 characters or less.")
 
-    this._name = aName;
+    this._name = aName
   }
 
   set tenantId(aTenantId) {
-    this.assertArgumentNotNull(aTenantId, "The tenantId must be provided.");
+    this.assertArgumentNotNull(aTenantId, "The tenantId must be provided.")
 
-    this._tenantId = aTenantId;
+    this._tenantId = aTenantId
   }
 
   set type(aType) {
-    this.assertArgumentNotNull(aType, "The type must be provided.");
+    this.assertArgumentNotNull(aType, "The type must be provided.")
 
-    this.assertArgumentTrue(aType == GroupMemberType.GROUP || aType  == GroupMemberType.USER, "Invalid group member type")
+    this.assertArgumentTrue(
+      aType === GroupMemberType.GROUP ||
+      aType === GroupMemberType.USER,
+      "Invalid group member type")
 
-    this._type = aType;
+    this._type = aType
   }
 }
 

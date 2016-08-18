@@ -2,8 +2,11 @@ const AssertionConcern = require("../../common/AssertionConcern")
 
 class ContactInformation extends AssertionConcern {
 
-  constructor(anEmailAddress, aPostalAddress, aPrimaryTelephone, aSecondaryTelephone) {
-    super();
+  constructor(anEmailAddress,
+      aPostalAddress,
+      aPrimaryTelephone,
+      aSecondaryTelephone) {
+    super()
 
     // TODO Weird stuff
     if (anEmailAddress instanceof ContactInformation) {
@@ -25,7 +28,7 @@ class ContactInformation extends AssertionConcern {
       anEmailAddress,
       this.postalAddress,
       this.primaryTelephone,
-      this.secondaryTelephone);
+      this.secondaryTelephone)
   }
 
   changePostalAddress(aPostalAddress) {
@@ -33,7 +36,7 @@ class ContactInformation extends AssertionConcern {
       this.emailAddress,
       aPostalAddress,
       this.primaryTelephone,
-      this.secondaryTelephone);
+      this.secondaryTelephone)
   }
 
   changePrimaryTelephone(aTelephone) {
@@ -41,7 +44,7 @@ class ContactInformation extends AssertionConcern {
       this.emailAddress,
       this.postalAddress,
       aTelephone,
-      this.secondaryTelephone);
+      this.secondaryTelephone)
   }
 
   changeSecondaryTelephone(aTelephone) {
@@ -49,10 +52,8 @@ class ContactInformation extends AssertionConcern {
       this.emailAddress,
       this.postalAddress,
       this.primaryTelephone,
-      aTelephone);
+      aTelephone)
   }
-
-
 }
 
 module.exports = ContactInformation

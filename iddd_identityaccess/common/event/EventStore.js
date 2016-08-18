@@ -13,11 +13,9 @@ class EventStore {
     return this.storedEvents.length
   }
 
-
   clean() {
     this.storedEvents = []
   }
-
 
   append(name, aDomainEvent) {
     let storedEvent = {
@@ -32,24 +30,18 @@ class EventStore {
     return storedEvent
   }
 
-  allStoredEventsBetween(
-    aLowStoredEventId,
-    aHighStoredEventId) {
-
+  allStoredEventsBetween(aLowStoredEventId, aHighStoredEventId) {
     return _.filter(this.storedEvents, (evt) => {
-      return evt.eventId >= aLowStoredEventId && evt.eventId <= aHighStoredEventId
+      return evt.eventId >= aLowStoredEventId &&
+        evt.eventId <= aHighStoredEventId
     })
-
   }
 
   allStoredEventsSince(aStoredEventId) {
-
-    return _.filter(this.storedEvents, evt => {
+    return _.filter(this.storedEvents, (evt) => {
       return evt.eventId > aStoredEventId
     })
-
   }
-
 }
 
 module.exports = EventStore

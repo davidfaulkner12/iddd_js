@@ -1,7 +1,5 @@
-const uuid = require("uuid")
-const _ = require("underscore")
-
-const ConcurrencySafeEntity = require("../../common/domain/ConcurrencySafeEntity")
+const ConcurrencySafeEntity =
+  require("../../common/domain/ConcurrencySafeEntity")
 
 class RegistrationInvitation extends ConcurrencySafeEntity {
   constructor(aTenantId,
@@ -24,21 +22,21 @@ class RegistrationInvitation extends ConcurrencySafeEntity {
 
   redefineAs() {
     this._startingOn = null
-    this._until = null;
-    return this;
+    this._until = null
+    return this
   }
 
   isIdentifiedBy(anInvitationIdentifier) {
-    let isIdentified = this.invitationId == anInvitationIdentifier
-    if (!isIdentified && this.description != null) {
-      isIdentified = this.description == anInvitationIdentifier
+    let isIdentified = this.invitationId === anInvitationIdentifier
+    if (!isIdentified && this.description) {
+      isIdentified = this.description === anInvitationIdentifier
     }
     return isIdentified
   }
 
   startingOn(aDate) {
-    if (this._until != null) {
-      throw new IllegalStateException("Cannot set starting-on date after _until date.");
+    if (this._until) {
+      throw new Error("Cannot set starting-on date after _until date.")
     }
 
     this._startingOn = aDate
@@ -47,43 +45,43 @@ class RegistrationInvitation extends ConcurrencySafeEntity {
     // prevents illegal state if _until() doesn't follow
     this._until = new Date(aDate.getTime() + 86400000)
 
-    return this;
+    return this
   }
 
   until(aDate) {
-    if (this._startingOn == null) {
-      throw new IllegalStateException("Cannot set until date before setting starting-on date.");
+    if (!this._startingOn) {
+      throw new Error("Cannot set until date before setting starting-on date.")
     }
 
     this._until = aDate
 
-    return this;
+    return this
   }
-
 
   assertValidInvitationDates() {
     // either both dates must be null, or both dates must be set
-    if (this._startingOn == null && this._until == null) {; // valid
-    } else if (this._startingOn == null || this._until == null &&
-      this._startingOn != this._until) {
-      throw new Error("IllegalState: This is an invalid open-ended invitation.");
+    if (!this._startingOn && !this._until) { // valid
+    } else if (!this._startingOn || !this._until &&
+      this._startingOn !== this._until) {
+      throw new Error("IllegalState: This is an invalid open-ended invitation.")
     } else if (this._startingOn > this._until) {
-      throw new Error("IllegalState: The starting date and time must be before the _until date and time.");
+      throw new Error(
+        "IllegalState: The starting date and time must be" +
+        "before the _until date and time.")
     }
   }
 
-
   get available() {
-    let isAvailable = false;
-    if (this._startingOn == null && this._until == null) {
-      isAvailable = true;
+    let isAvailable = false
+    if (!this._startingOn && !this._until) {
+      isAvailable = true
     } else {
       let time = new Date()
       if (time >= this._startingOn && time <= this._until) {
-        isAvailable = true;
+        isAvailable = true
       }
     }
-    return isAvailable;
+    return isAvailable
   }
 
   get description() {
@@ -91,11 +89,12 @@ class RegistrationInvitation extends ConcurrencySafeEntity {
   }
 
   set description(aDescription) {
+    this.assertArgumentNotEmpty(aDescription,
+      "The invitation description is required.")
+    this.assertArgumentLength(aDescription, 1, 100,
+      "The invitation description must be 100 characters or less.")
 
-    this.assertArgumentNotEmpty(aDescription, "The invitation description is required.");
-    this.assertArgumentLength(aDescription, 1, 100, "The invitation description must be 100 characters or less.");
-
-    this._description = aDescription;
+    this._description = aDescription
   }
 
   get invitationId() {
@@ -103,10 +102,12 @@ class RegistrationInvitation extends ConcurrencySafeEntity {
   }
 
   set invitationId(anInvitationId) {
-    this.assertArgumentNotEmpty(anInvitationId, "The invitationId is required.");
-    this.assertArgumentLength(anInvitationId, 1, 36, "The invitation id must be 36 characters or less.");
+    this.assertArgumentNotEmpty(anInvitationId,
+      "The invitationId is required.")
+    this.assertArgumentLength(anInvitationId, 1, 36,
+      "The invitation id must be 36 characters or less.")
 
-    this._invitationId = anInvitationId;
+    this._invitationId = anInvitationId
   }
 
   get tenantId() {
@@ -114,58 +115,10 @@ class RegistrationInvitation extends ConcurrencySafeEntity {
   }
 
   set tenantId(aTenantId) {
-    this.assertArgumentNotNull(aTenantId, "The tenantId is required.");
+    this.assertArgumentNotNull(aTenantId, "The tenantId is required.")
 
-    this._tenantId = aTenantId;
+    this._tenantId = aTenantId
   }
 }
 
-
-
 module.exports = RegistrationInvitation
-
-/*
-public class RegistrationInvitation extends ConcurrencySafeEntity {
-
-    public boolean isAvailable() {
-        boolean isAvailable = false;
-        if (this._startingOn() == null && this._until() == null) {
-            isAvailable = true;
-        } else {
-            long time = (new Date()).getTime();
-            if (time >= this._startingOn().getTime() && time <= this._until().getTime()) {
-                isAvailable = true;
-            }
-        }
-        return isAvailable;
-    }
-
-
-
-    public RegistrationInvitation _startingOn(Date aDate) {
-        if (this._until() != null) {
-            throw new IllegalStateException("Cannot set starting-on date after _until date.");
-        }
-
-        this.setStartingOn(aDate);
-
-        // temporary if _until() properly follows, but
-        // prevents illegal state if _until() doesn't follow
-        this.setUntil(new Date(aDate.getTime() + 86400000));
-
-        return this;
-    }
-
-    public InvitationDescriptor toDescriptor() {
-        return
-                new InvitationDescriptor(
-                        this.tenantId(),
-                        this.invitationId(),
-                        this.description(),
-                        this._startingOn(),
-                        this._until());
-    }
-
-\
-}
-*/

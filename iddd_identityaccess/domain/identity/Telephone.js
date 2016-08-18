@@ -6,7 +6,6 @@ class Telephone extends AssertionConcern {
     // TODO Copy constructor
     super()
     this.number = aNumber
-
   }
 
   get number() {
@@ -14,13 +13,14 @@ class Telephone extends AssertionConcern {
   }
 
   set number(aNumber) {
-    this.assertArgumentNotEmpty(aNumber, "Telephone number is required.");
-    this.assertArgumentLength(aNumber, 5, 20, "Telephone number may not be more than 20 characters.");
+    this.assertArgumentNotEmpty(aNumber, "Telephone number is required.")
+    this.assertArgumentLength(aNumber, 5, 20,
+      "Telephone number may not be more than 20 characters.")
     this.assertArgumentTrue(
       /(\d{3}-)?\d{3}-(\d{3})|(\d{4})/.test(aNumber),
-      "Telephone number or its format is invalid.");
+      "Telephone number or its format is invalid.")
 
-    this._number = aNumber;
+    this._number = aNumber
   }
 }
 

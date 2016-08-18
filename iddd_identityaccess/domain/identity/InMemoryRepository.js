@@ -12,17 +12,16 @@ class InMemoryRepository {
   add(anEntity) {
     let key = this.keyOf(anEntity)
     if (_.has(this._repository, key)) {
-      throw new Error("IllegalState: Duplicate key.");
+      throw new Error("IllegalState: Duplicate key.")
     }
 
     this._repository[key] = anEntity
   }
 
-
   remove(aTenant) {
-      let key = this.keyOf(aTenant)
+    let key = this.keyOf(aTenant)
 
-      delete this._repository[key]
+    delete this._repository[key]
   }
 
   clean() {

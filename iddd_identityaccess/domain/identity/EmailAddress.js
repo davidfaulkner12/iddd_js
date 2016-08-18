@@ -13,14 +13,15 @@ class EmailAddress extends AssertionConcern {
   }
 
   set address(anAddress) {
-    this.assertArgumentNotEmpty(anAddress, "The email address is required.");
-    this.assertArgumentLength(anAddress, 1, 100, "Email address must be 100 characters or less.");
+    this.assertArgumentNotEmpty(anAddress, "The email address is required.")
+    this.assertArgumentLength(anAddress, 1, 100,
+      "Email address must be 100 characters or less.")
     this.assertArgumentTrue(
       // Note: I redid the regex here
       /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/.test(anAddress),
-      "Email address format is invalid.");
+      "Email address format is invalid.")
 
-    this._address = anAddress;
+    this._address = anAddress
   }
 
 }

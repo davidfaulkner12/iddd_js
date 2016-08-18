@@ -17,11 +17,9 @@ module.exports = {
     })
   },
 
-
   resetAll() {
     this._ee.removeAllListeners()
   },
-
 
   subscribe(evtName, callback) {
     this._ee.on(evtName, callback)
@@ -30,14 +28,14 @@ module.exports = {
   publish(evtName, evtData) {
     evtData.eventVersion = evtData.eventVersion || 1
     evtData.occurredOn = evtData.occurredOn || new Date()
-    //console.log("Publishing event", evtName, evtData)
+    // console.log("Publishing event", evtName, evtData)
 
     this._ee.emit(evtName, evtData, evtName)
     this._ee.emit("*", evtData, evtName)
   },
 
   publishAll(eventArray) {
-    _.map(eventArray, event => {
+    _.map(eventArray, (event) => {
       this.publish(event[0], event[1])
     })
   }

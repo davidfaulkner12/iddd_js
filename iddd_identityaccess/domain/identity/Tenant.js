@@ -1,7 +1,8 @@
 const uuid = require("uuid")
 const _ = require("underscore")
 
-const ConcurrencySafeEntity = require("../../common/domain/ConcurrencySafeEntity")
+const ConcurrencySafeEntity =
+  require("../../common/domain/ConcurrencySafeEntity")
 const DomainEventPublisher = require("../../common/domain/DomainEventPublisher")
 
 const RegistrationInvitation = require("./RegistrationInvitation")
@@ -13,7 +14,7 @@ class Tenant extends ConcurrencySafeEntity {
   constructor(aTenantId, aName, aDescription, anActive) {
     super()
 
-    this.active = anActive;
+    this.active = anActive
     this.description = aDescription
     this.name = aName
     this.tenantId = aTenantId
@@ -22,32 +23,32 @@ class Tenant extends ConcurrencySafeEntity {
   }
 
   offerRegistrationInvitation(aDescription) {
-    this.assertStateTrue(this.active, "Tenant is not active.");
+    this.assertStateTrue(this.active, "Tenant is not active.")
 
     this.assertStateFalse(
       this.isRegistrationAvailableThrough(aDescription),
-      "Invitation already exists.");
+      "Invitation already exists.")
 
     let invitation =
       new RegistrationInvitation(
         this.tenantId,
         uuid.v4(),
-        aDescription);
+        aDescription)
 
     let added = this.registrationInvitations.push(invitation)
 
-    this.assertStateTrue(added, "The invitation should have been added.");
+    this.assertStateTrue(added, "The invitation should have been added.")
 
-    return invitation;
+    return invitation
   }
 
   isRegistrationAvailableThrough(anInvitationIdentifier) {
-    this.assertStateTrue(this.active, "Tenant is not active.");
+    this.assertStateTrue(this.active, "Tenant is not active.")
 
     let invitation =
-      this.invitation(anInvitationIdentifier);
+      this.invitation(anInvitationIdentifier)
 
-    return invitation == null ? false : invitation.available;
+    return invitation ? invitation.available : false
   }
 
   invitation(anInvitationIdentifier) {
@@ -62,33 +63,31 @@ class Tenant extends ConcurrencySafeEntity {
     aPassword,
     anEnablement,
     aPerson) {
+    this.assertStateTrue(this.active, "Tenant is not active.")
 
-    this.assertStateTrue(this.active, "Tenant is not active.");
-
-    let user = null;
+    let user = null
 
     if (this.isRegistrationAvailableThrough(anInvitationIdentifier)) {
-
       // ensure same tenant
-      aPerson.tenantId = this.tenantId;
+      aPerson.tenantId = this.tenantId
 
       user = new User(
         this.tenantId,
         aUsername,
         aPassword,
         anEnablement,
-        aPerson);
+        aPerson)
     }
 
-    return user;
+    return user
   }
 
   withdrawInvitation(anInvitationIdentifier) {
-
-    this.registrationInvitations = _.reject(this.registrationInvitations, (item) => {
-      return item.isIdentifiedBy(anInvitationIdentifier)
-    })
-
+    this.registrationInvitations = _.reject(this.registrationInvitations,
+      (item) => {
+        return item.isIdentifiedBy(anInvitationIdentifier)
+      }
+    )
   }
 
   provisionRole(aName, aDescription, aSupportsNesting = false) {
@@ -102,20 +101,20 @@ class Tenant extends ConcurrencySafeEntity {
         name: aName
       })
 
-    return role;
+    return role
   }
 
   redefineRegistrationInvitationAs(anInvitationIdentifier) {
-    this.assertStateTrue(this.active, "Tenant is not active.");
+    this.assertStateTrue(this.active, "Tenant is not active.")
 
     let invitation =
-      this.invitation(anInvitationIdentifier);
+      this.invitation(anInvitationIdentifier)
 
-    if (invitation != null) {
+    if (invitation !== null) {
       invitation.redefineAs().openEnded()
     }
 
-    return invitation;
+    return invitation
   }
 
   allAvailableRegistrationInvitations() {
@@ -131,9 +130,8 @@ class Tenant extends ConcurrencySafeEntity {
   }
 
   _allRegistrationInvitationsFor(isAvailable) {
-
     return _.filter(this.registrationInvitations, (invitation) => {
-      return isAvailable == invitation.available
+      return isAvailable === invitation.available
     })
   }
 
@@ -149,13 +147,11 @@ class Tenant extends ConcurrencySafeEntity {
         name: aName
       })
 
-    return group;
-
+    return group
   }
 
   activate() {
     if (!this.active) {
-
       this.active = true
 
       DomainEventPublisher
@@ -167,7 +163,6 @@ class Tenant extends ConcurrencySafeEntity {
 
   deactivate() {
     if (this.active) {
-
       this.active = false
 
       DomainEventPublisher

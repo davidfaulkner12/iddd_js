@@ -2,48 +2,46 @@ const NotificationLogId = require("./NotificationLogId")
 
 class NotificationLog {
 
-    constructor(
-            aNotificationLogId,
-            aNextNotificationLogId,
-            aPreviousNotificationLogId,
-            aNotifications,
-            anArchivedIndicator) {
+  constructor(
+      aNotificationLogId,
+      aNextNotificationLogId,
+      aPreviousNotificationLogId,
+      aNotifications,
+      anArchivedIndicator) {
+    this.archived = anArchivedIndicator
+    this.nextNotificationLogId = aNextNotificationLogId
+    this.notificationLogId = aNotificationLogId
+    this.notifications = aNotifications
+    this.previousNotificationLogId = aPreviousNotificationLogId
+  }
 
-        this.archived = anArchivedIndicator
-        this.nextNotificationLogId = aNextNotificationLogId
-        this.notificationLogId = aNotificationLogId
-        this.notifications = aNotifications
-        this.previousNotificationLogId = aPreviousNotificationLogId
-    }
+  totalNotifications() {
+    return this.notifications.length
+  }
 
+  hasNextNotificationLog() {
+    return Boolean(this.nextNotificationLogId)
+  }
 
-    totalNotifications() {
-        return this.notifications.length
-    }
+  hasPreviousNotificationLog() {
+    return Boolean(this.previousNotificationLogId)
+  }
 
-    hasNextNotificationLog(){
-      return this.nextNotificationLogId != null
-    }
+  isArchived() {
+    return this.archived
+  }
 
-    hasPreviousNotificationLog() {
-      return this.previousNotificationLogId != null
-    }
+  decodedNotificationLogId() {
+    return NotificationLogId.decode(this.notificationLogId)
+  }
 
-    isArchived() {
-      return this.archived
-    }
+  decodedPreviousNotificationLogId() {
+    return NotificationLogId.decode(this.previousNotificationLogId)
+  }
 
-    decodedNotificationLogId() {
-      return NotificationLogId.decode(this.notificationLogId)
-    }
-
-    decodedPreviousNotificationLogId() {
-      return NotificationLogId.decode(this.previousNotificationLogId)
-    }
-
-    decodedNextNotificationLogId() {
-      return NotificationLogId.decode(this.nextNotificationLogId)
-    }
+  decodedNextNotificationLogId() {
+    return NotificationLogId.decode(this.nextNotificationLogId)
+  }
 }
 
 module.exports = NotificationLog

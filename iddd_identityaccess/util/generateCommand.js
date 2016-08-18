@@ -26,14 +26,15 @@ _.each(args, (arg) => {
     let bigRe = new RegExp("public " + filename + "\((.*)\)")
     data = bigRe.exec(data)[1]
     let re = /(\w+) (\w+)/g
-      while((match = re.exec(data)) != null) {
-        matches.push(match)
-      }
+
+    while ((match = re.exec(data)) !== null) {
+      matches.push(match)
+    }
     // Now we can transform the data
     let fields = _.map(matches, (match) => {
-
       let name = match[2]
-      if (name.startsWith("a") && name.charAt(1).toUpperCase() == name.charAt(1)) {
+      if (name.startsWith("a") &&
+        name.charAt(1).toUpperCase() === name.charAt(1)) {
         console.log("Found one!", name)
         let firstLetter = name.charAt(1)
         name = firstLetter.toLowerCase() + name.slice(2)
@@ -43,9 +44,9 @@ _.each(args, (arg) => {
         name: name,
         type: match[1],
         // Need to do this to make the template simple
-        isString: match[1] == "String",
-        isDate: match[1] == "Date",
-        isBoolean: match[1] == "boolean"
+        isString: match[1] === "String",
+        isDate: match[1] === "Date",
+        isBoolean: match[1] === "boolean"
       }
     })
     createJsFile({filename: filename, fields: fields})
@@ -55,15 +56,15 @@ _.each(args, (arg) => {
 let createJsFile = (obj) => {
   console.log("Creating JS file for", obj.filename, obj.fields)
   let jsFile = template(obj)
-  //console.log(jsFile)
+  // console.log(jsFile)
   fs.writeFile(path.join(dir, obj.filename + ".js"), jsFile)
-  fs.appendFile(commandFile, "module.exports." + obj.filename + " = require(\"./" + obj.filename + "\")\n")
+  fs.appendFile(commandFile, "module.exports." +
+    obj.filename + " = require(\"./" + obj.filename + "\")\n")
 }
 
 let template = handlebars.compile(
 `const _ = require("underscore")
 const AssertionConcern = require("../../common/AssertionConcern")
-
 
 class {{filename}} extends AssertionConcern {
   constructor(
@@ -77,13 +78,16 @@ class {{filename}} extends AssertionConcern {
     {{#each fields}}
     this.assertArgumentNotNull({{this.name}}, "{{this.name}} must be provided.")
     {{#if this.isString}}
-    this.assertArgumentTrue(_.isString({{this.name}}), "{{this.name}} must be a String")
+    this.assertArgumentTrue(_.isString({{this.name}}),
+      "{{this.name}} must be a String")
     {{/if}}
     {{#if this.isDate}}
-    this.assertArgumentTrue(_.isDate({{this.name}}), "{{this.name}} must be a Date")
+    this.assertArgumentTrue(_.isDate({{this.name}}),
+      "{{this.name}} must be a Date")
     {{/if}}
     {{#if this.isBoolean}}
-    this.assertArgumentTrue(_.isBoolean({{this.name}}), "{{this.name}} must be a boolean")
+    this.assertArgumentTrue(_.isBoolean({{this.name}}),
+      "{{this.name}} must be a boolean")
     {{/if}}
     this._{{this.name}} = {{this.name}}
 

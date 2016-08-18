@@ -1,7 +1,6 @@
 const _ = require("underscore")
 const AssertionConcern = require("../../common/AssertionConcern")
 
-
 class RemoveGroupFromGroupCommand extends AssertionConcern {
   constructor(
 
@@ -17,14 +16,17 @@ class RemoveGroupFromGroupCommand extends AssertionConcern {
     this.assertArgumentTrue(_.isString(tenantId), "tenantId must be a String")
     this._tenantId = tenantId
 
-    this.assertArgumentNotNull(parentGroupName, "parentGroupName must be provided.")
-    this.assertArgumentTrue(_.isString(parentGroupName), "parentGroupName must be a String")
+    this.assertArgumentNotNull(parentGroupName,
+      "parentGroupName must be provided.")
+    this.assertArgumentTrue(_.isString(parentGroupName),
+      "parentGroupName must be a String")
     this._parentGroupName = parentGroupName
 
-    this.assertArgumentNotNull(childGroupName, "childGroupName must be provided.")
-    this.assertArgumentTrue(_.isString(childGroupName), "childGroupName must be a String")
+    this.assertArgumentNotNull(childGroupName,
+      "childGroupName must be provided.")
+    this.assertArgumentTrue(_.isString(childGroupName),
+      "childGroupName must be a String")
     this._childGroupName = childGroupName
-
   }
 
   get tenantId() {

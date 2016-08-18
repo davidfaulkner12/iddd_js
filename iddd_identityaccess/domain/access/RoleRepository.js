@@ -9,7 +9,7 @@ class RoleRepository extends InMemoryRepository {
   }
 
   allRoles(aTenantId) {
-    return _.filter(this.repository, role => {
+    return _.filter(this.repository, (role) => {
       return role.tenantId === aTenantId
     })
   }

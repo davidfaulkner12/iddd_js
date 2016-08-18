@@ -3,10 +3,9 @@ const AssertionConcern = require("../AssertionConcern")
 class Notification extends AssertionConcern {
 
   constructor(
-    aNotificationId,
-    anEventName,
-    anEvent) {
-
+      aNotificationId,
+      anEventName,
+      anEvent) {
     super()
 
     this.notificationId = aNotificationId
@@ -15,14 +14,12 @@ class Notification extends AssertionConcern {
 
     this.event = anEvent
     this.typeName = anEventName
-
-
   }
 
   set event(anEvent) {
-    this.assertArgumentNotNull(anEvent, "The event is required.");
+    this.assertArgumentNotNull(anEvent, "The event is required.")
 
-    this._event = anEvent;
+    this._event = anEvent
   }
 
   get event() {
@@ -30,10 +27,11 @@ class Notification extends AssertionConcern {
   }
 
   set typeName(aTypeName) {
-    this.assertArgumentNotEmpty(aTypeName, "The type name is required.");
-    this.assertArgumentLength(aTypeName, 100, "The type name must be 100 characters or less.");
+    this.assertArgumentNotEmpty(aTypeName, "The type name is required.")
+    this.assertArgumentLength(aTypeName, 100,
+        "The type name must be 100 characters or less.")
 
-    this._typeName = aTypeName;
+    this._typeName = aTypeName
   }
 
   get typeName() {

@@ -11,19 +11,20 @@ class NotificationApplicationService {
   }
 
   currentNotificationLog() {
-    let factory = new NotificationLogFactory(this.eventStore);
+    let factory = new NotificationLogFactory(this.eventStore)
 
-    return factory.createCurrentNotificationLog();
+    return factory.createCurrentNotificationLog()
   }
 
   notificationLog(aNotificationLogId) {
-    let factory = new NotificationLogFactory(this.eventStore);
+    let factory = new NotificationLogFactory(this.eventStore)
 
-    return factory.createNotificationLog(NotificationLogId.decode(aNotificationLogId));
+    return factory.createNotificationLog(
+      NotificationLogId.decode(aNotificationLogId))
   }
 
   publishNotifications() {
-    this.notificationPublisher.publishNotifications();
+    this.notificationPublisher.publishNotifications()
   }
 }
 

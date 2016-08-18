@@ -7,7 +7,8 @@ const EventStore = configuration.objects.eventStore
 
 const AccessApplicationService = require("./AccessApplicationService")
 const IdentityApplicationService = require("./IdentityApplicationService")
-const NotificationApplicationService = require("./NotificationApplicationService")
+const NotificationApplicationService =
+  require("./NotificationApplicationService")
 
 let eventStore = new EventStore()
 
@@ -26,7 +27,12 @@ let notificationPublisher = {
   }
 }
 
-module.exports.accessApplicationService = new AccessApplicationService(DomainRegistry.groupRepository, DomainRegistry.roleRepository, DomainRegistry.tenantRepository, DomainRegistry.userRepository)
+module.exports.accessApplicationService =
+  new AccessApplicationService(
+    DomainRegistry.groupRepository,
+    DomainRegistry.roleRepository,
+    DomainRegistry.tenantRepository,
+    DomainRegistry.userRepository)
 
 module.exports.identityApplicationService = new IdentityApplicationService(
   DomainRegistry.authenticationService,
@@ -37,6 +43,7 @@ module.exports.identityApplicationService = new IdentityApplicationService(
   DomainRegistry.userRepository
 )
 
-let notificationApplicationService = new NotificationApplicationService(eventStore, notificationPublisher)
+let notificationApplicationService =
+  new NotificationApplicationService(eventStore, notificationPublisher)
 
 module.exports.notificationApplicationService = notificationApplicationService

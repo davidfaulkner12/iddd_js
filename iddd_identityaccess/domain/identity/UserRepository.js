@@ -12,7 +12,7 @@ class UserRepository extends InMemoryRepository {
   }
 
   userWithUsername(aTenantId, aUsername) {
-    let user = _.find(_.values(this.repository), user => {
+    let user = _.find(_.values(this.repository), (user) => {
       return _.isEqual(user.tenantId, aTenantId) && user.username === aUsername
     })
     return user
@@ -26,7 +26,7 @@ class UserRepository extends InMemoryRepository {
     aLastNamePrefix = aLastNamePrefix.toLowerCase()
 
     return _.filter(_.values(this.repository),
-      user => {
+      (user) => {
         return _.isEqual(user.tenantId, aTenantId) &&
           user.person.name.firstName.toLowerCase()
             .startsWith(aFirstNamePrefix) &&
@@ -38,7 +38,7 @@ class UserRepository extends InMemoryRepository {
       aTenantId,
       aUsername,
       anEncryptedPassword) {
-    return _.find(this.repository, user => {
+    return _.find(this.repository, (user) => {
       return _.isEqual(user.tenantId, aTenantId) &&
         user.username === aUsername &&
         user._password === anEncryptedPassword

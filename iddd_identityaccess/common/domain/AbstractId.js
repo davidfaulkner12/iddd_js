@@ -17,12 +17,13 @@ class AbstractId extends AssertionConcern {
   }
 
   set id(anId) {
-    this.assertArgumentNotEmpty(anId, "The basic identity is required.");
-    this.assertArgumentLength(anId, 36, "The basic identity must be 36 characters.");
+    this.assertArgumentNotEmpty(anId, "The basic identity is required.")
+    this.assertArgumentLength(anId, 36,
+      "The basic identity must be 36 characters.")
 
-    this.validateId(anId);
+    this.validateId(anId)
 
-    this._id = anId;
+    this._id = anId
   }
 
 }

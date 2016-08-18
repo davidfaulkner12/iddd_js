@@ -27,47 +27,44 @@ class IdentityApplicationService {
   }
 
   activateTenant(aCommand) {
-    let tenant = this._existingTenant(aCommand.tenantId);
+    let tenant = this._existingTenant(aCommand.tenantId)
 
-    tenant.activate();
+    tenant.activate()
   }
 
   deactivateTenant(aCommand) {
-    let tenant = this._existingTenant(aCommand.tenantId);
+    let tenant = this._existingTenant(aCommand.tenantId)
 
-    tenant.deactivate();
+    tenant.deactivate()
   }
 
   addGroupToGroup(aCommand) {
     let parentGroup =
       this._existingGroup(
         aCommand.tenantId,
-        aCommand.parentGroupName);
+        aCommand.parentGroupName)
 
     let childGroup =
       this._existingGroup(
         aCommand.tenantId,
-        aCommand.childGroupName);
+        aCommand.childGroupName)
 
-    parentGroup.addGroup(childGroup, this.groupMemberService);
+    parentGroup.addGroup(childGroup, this.groupMemberService)
   }
-
 
   addUserToGroup(aCommand) {
     let group =
       this._existingGroup(
         aCommand.tenantId,
-        aCommand.groupName);
+        aCommand.groupName)
 
     let user =
       this._existingUser(
         aCommand.tenantId,
-        aCommand.username);
+        aCommand.username)
 
-    group.addUser(user);
+    group.addUser(user)
   }
-
-
 
   authenticateUser(aCommand) {
     let userDescriptor =
@@ -75,13 +72,13 @@ class IdentityApplicationService {
       .authenticate(
         new TenantId(aCommand.tenantId),
         aCommand.username,
-        aCommand.password);
+        aCommand.password)
 
-    return userDescriptor;
+    return userDescriptor
   }
 
   changeUserContactInformation(aCommand) {
-    let user = this._existingUser(aCommand.tenantId, aCommand.username);
+    let user = this._existingUser(aCommand.tenantId, aCommand.username)
 
     this._internalChangeUserContactInformation(
       user,
@@ -94,23 +91,21 @@ class IdentityApplicationService {
           aCommand.addressPostalCode,
           aCommand.addressCountryCode),
         new Telephone(aCommand.primaryTelephone),
-        new Telephone(aCommand.secondaryTelephone)));
+        new Telephone(aCommand.secondaryTelephone)))
   }
 
-
   changeUserEmailAddress(aCommand) {
-    let user = this._existingUser(aCommand.tenantId, aCommand.username);
+    let user = this._existingUser(aCommand.tenantId, aCommand.username)
 
     this._internalChangeUserContactInformation(
       user,
       user.person
       .contactInformation
-      .changeEmailAddress(new EmailAddress(aCommand.emailAddress)));
+      .changeEmailAddress(new EmailAddress(aCommand.emailAddress)))
   }
 
-
   changeUserPostalAddress(aCommand) {
-    let user = this._existingUser(aCommand.tenantId, aCommand.username);
+    let user = this._existingUser(aCommand.tenantId, aCommand.username)
 
     this._internalChangeUserContactInformation(
       user,
@@ -122,103 +117,89 @@ class IdentityApplicationService {
           aCommand.addressCity,
           aCommand.addressStateProvince,
           aCommand.addressPostalCode,
-          aCommand.addressCountryCode)));
+          aCommand.addressCountryCode)))
   }
-
 
   changeUserPrimaryTelephone(aCommand) {
-    let user = this._existingUser(aCommand.tenantId, aCommand.username);
+    let user = this._existingUser(aCommand.tenantId, aCommand.username)
 
     this._internalChangeUserContactInformation(
       user,
       user.person
       .contactInformation
-      .changePrimaryTelephone(new Telephone(aCommand.telephone)));
+      .changePrimaryTelephone(new Telephone(aCommand.telephone)))
   }
-
 
   changeUserSecondaryTelephone(aCommand) {
-    let user = this._existingUser(aCommand.tenantId, aCommand.username);
+    let user = this._existingUser(aCommand.tenantId, aCommand.username)
 
     this._internalChangeUserContactInformation(
       user,
       user.person
       .contactInformation
-      .changeSecondaryTelephone(new Telephone(aCommand.telephone)));
+      .changeSecondaryTelephone(new Telephone(aCommand.telephone)))
   }
-
 
   changeUserPassword(aCommand) {
-    let user = this._existingUser(aCommand.tenantId, aCommand.username);
+    let user = this._existingUser(aCommand.tenantId, aCommand.username)
 
-    user.changePassword(aCommand.currentPassword, aCommand.changedPassword);
+    user.changePassword(aCommand.currentPassword, aCommand.changedPassword)
   }
-
 
   changeUserPersonalName(aCommand) {
-    let user = this._existingUser(aCommand.tenantId, aCommand.username);
+    let user = this._existingUser(aCommand.tenantId, aCommand.username)
 
-    user.person.changeName(new FullName(aCommand.firstName, aCommand.lastName));
+    user.person.changeName(new FullName(aCommand.firstName, aCommand.lastName))
   }
 
-
   defineUserEnablement(aCommand) {
-    let user = this._existingUser(aCommand.tenantId, aCommand.username);
+    let user = this._existingUser(aCommand.tenantId, aCommand.username)
 
     user.defineEnablement(
       new Enablement(
         aCommand.enabled,
         aCommand.startDate,
-        aCommand.endDate));
+        aCommand.endDate))
   }
 
+  userDescriptor(aTenantId, aUsername) {
+    let userDescriptor = null
 
+    let user = this.user(aTenantId, aUsername)
 
-  userDescriptor(
-    aTenantId,
-    aUsername) {
-
-    let userDescriptor = null;
-
-    let user = this.user(aTenantId, aUsername);
-
-    if (user != null) {
-      userDescriptor = user.userDescriptor;
+    if (user) {
+      userDescriptor = user.userDescriptor
     }
 
-    return userDescriptor;
+    return userDescriptor
   }
-
-
 
   isGroupMember(aTenantId, aGroupName, aUsername) {
     let group =
       this._existingGroup(
         aTenantId,
-        aGroupName);
+        aGroupName)
 
     let user =
       this._existingUser(
         aTenantId,
-        aUsername);
+        aUsername)
 
-    return group.isMember(user, this.groupMemberService);
+    return group.isMember(user, this.groupMemberService)
   }
 
-
   provisionGroup(aCommand) {
-    let tenant = this._existingTenant(aCommand.tenantId);
+    let tenant = this._existingTenant(aCommand.tenantId)
 
     let group =
       tenant.provisionGroup(
         aCommand.GroupName,
-        aCommand.Description);
+        aCommand.Description)
 
-    this.groupRepository.add(group);
+    this.groupRepository.add(group)
 
-    return group;
+    return group
   }
-
 
   provisionTenant(aCommand) {
     return this.tenantProvisioningService.provisionTenant(
@@ -235,12 +216,11 @@ class IdentityApplicationService {
         aCommand.addressPostalCode,
         aCommand.addressCountryCode),
       new Telephone(aCommand.primaryTelephone),
-      new Telephone(aCommand.secondaryTelephone));
+      new Telephone(aCommand.secondaryTelephone))
   }
 
-
   registerUser(aCommand) {
-    let tenant = this._existingTenant(aCommand.tenantId);
+    let tenant = this._existingTenant(aCommand.tenantId)
 
     let user =
       tenant.registerUser(
@@ -263,87 +243,82 @@ class IdentityApplicationService {
               aCommand.addressPostalCode,
               aCommand.addressCountryCode),
             new Telephone(aCommand.primaryTelephone),
-            new Telephone(aCommand.secondaryTelephone))));
+            new Telephone(aCommand.secondaryTelephone))))
 
-    if (user == null) {
-      throw new Error("IllegalState: User not registered.");
+    if (!user) {
+      throw new Error("IllegalState: User not registered.")
     }
 
-    this.userRepository.add(user);
+    this.userRepository.add(user)
 
-    return user;
+    return user
   }
-
 
   removeGroupFromGroup(aCommand) {
     let parentGroup =
       this._existingGroup(
         aCommand.tenantId,
-        aCommand.parentGroupName);
+        aCommand.parentGroupName)
 
     let childGroup =
       this._existingGroup(
         aCommand.tenantId,
-        aCommand.childGroupName);
+        aCommand.childGroupName)
 
-    parentGroup.removeGroup(childGroup);
+    parentGroup.removeGroup(childGroup)
   }
-
 
   removeUserFromGroup(aCommand) {
     let group =
       this._existingGroup(
         aCommand.tenantId,
-        aCommand.groupName);
+        aCommand.groupName)
 
     let user =
       this._existingUser(
         aCommand.tenantId,
-        aCommand.username);
+        aCommand.username)
 
-    group.removeUser(user);
+    group.removeUser(user)
   }
-
-
-
 
   tenant(aTenantId) {
     let tenant =
       this.tenantRepository
-      .tenantOfId(new TenantId(aTenantId));
+      .tenantOfId(new TenantId(aTenantId))
 
-    return tenant;
+    return tenant
   }
 
   _existingTenant(aTenantId) {
-    let tenant = this.tenant(aTenantId);
+    let tenant = this.tenant(aTenantId)
 
-    if (tenant == null) {
+    if (!tenant) {
       throw new Error(
-        "Illegal agrument Tenant does not exist for: " + aTenantId);
+        "Illegal agrument Tenant does not exist for: " + aTenantId)
     }
 
-    return tenant;
+    return tenant
   }
 
   group(aTenantId, aGroupName) {
     let group =
       this.groupRepository
-      .groupNamed(new TenantId(aTenantId), aGroupName);
+      .groupNamed(new TenantId(aTenantId), aGroupName)
 
-    return group;
+    return group
   }
 
   _existingGroup(aTenantId, aGroupName) {
-    let group = this.group(aTenantId, aGroupName);
+    let group = this.group(aTenantId, aGroupName)
 
-    if (group == null) {
+    if (!group) {
       throw new Error(
         "IllegalArgument: Group does not exist for: " +
-        aTenantId + " and: " + aGroupName);
+        aTenantId + " and: " + aGroupName)
     }
 
-    return group;
+    return group
   }
 
   user(aTenantId, aUsername) {
@@ -351,44 +326,31 @@ class IdentityApplicationService {
       this.userRepository
       .userWithUsername(
         new TenantId(aTenantId),
-        aUsername);
+        aUsername)
 
-    return user;
+    return user
   }
 
   _existingUser(aTenantId, aUsername) {
-    let user = this.user(aTenantId, aUsername);
+    let user = this.user(aTenantId, aUsername)
 
-    if (user == null) {
+    if (!user) {
       throw new Error(
         "IllegalArgumetn: User does not exist for: " +
-        aTenantId + " and " + aUsername);
+        aTenantId + " and " + aUsername)
     }
 
-    return user;
+    return user
   }
 
-
-
-  _internalChangeUserContactInformation(
-    aUser,
-    aContactInformation) {
-
-    if (aUser == null) {
-      throw new Error("IllegalArgument: User must exist.");
+  _internalChangeUserContactInformation(aUser, aContactInformation) {
+    if (!aUser) {
+      throw new Error("IllegalArgument: User must exist.")
     }
 
-    aUser.person.changeContactInformation(aContactInformation);
+    aUser.person.changeContactInformation(aContactInformation)
   }
-
 
 }
 
 module.exports = IdentityApplicationService
-
-/*
-
-
-
-  }
-  */

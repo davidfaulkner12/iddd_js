@@ -1,7 +1,7 @@
 const DomainEventPublisher = require("../../common/domain/DomainEventPublisher")
 
 const Tenant = require("./Tenant")
-const { Enablement, ContactInformation } = require("./IdentityValueObjects")
+const {Enablement, ContactInformation} = require("./IdentityValueObjects")
 const Person = require("./Person")
 const DomainRegistry = require("../DomainRegistry")
 
@@ -13,21 +13,20 @@ class TenantProvisioningService {
   }
 
   provisionTenant(
-    aTenantName,
-    aTenantDescription,
-    anAdministorName,
-    anEmailAddress,
-    aPostalAddress,
-    aPrimaryTelephone,
-    aSecondaryTelephone) {
-
+      aTenantName,
+      aTenantDescription,
+      anAdministorName,
+      anEmailAddress,
+      aPostalAddress,
+      aPrimaryTelephone,
+      aSecondaryTelephone) {
     let tenant = new Tenant(
         this._tenantRepository.nextIdentity(),
         aTenantName,
         aTenantDescription,
         true) // must be active to register admin
 
-    this._tenantRepository.add(tenant);
+    this._tenantRepository.add(tenant)
 
     this.registerAdministratorFor(
       tenant,
@@ -35,33 +34,30 @@ class TenantProvisioningService {
       anEmailAddress,
       aPostalAddress,
       aPrimaryTelephone,
-      aSecondaryTelephone);
-
+      aSecondaryTelephone)
 
     DomainEventPublisher
       .publish("TenantProvisioned", {
         tenantId: tenant.tenantId
-      });
+      })
 
-    return tenant;
-
+    return tenant
   }
 
   registerAdministratorFor(
-    aTenant,
-    anAdministorName,
-    anEmailAddress,
-    aPostalAddress,
-    aPrimaryTelephone,
-    aSecondaryTelephone) {
-
+      aTenant,
+      anAdministorName,
+      anEmailAddress,
+      aPostalAddress,
+      aPrimaryTelephone,
+      aSecondaryTelephone) {
     let invitation =
       aTenant.offerRegistrationInvitation("init").openEnded()
 
     let strongPassword =
       DomainRegistry
       .passwordService
-      .generateStrongPassword();
+      .generateStrongPassword()
 
     let admin =
       aTenant.registerUser(
@@ -76,20 +72,20 @@ class TenantProvisioningService {
             anEmailAddress,
             aPostalAddress,
             aPrimaryTelephone,
-            aSecondaryTelephone)));
+            aSecondaryTelephone)))
 
-    aTenant.withdrawInvitation(invitation.invitationId);
+    aTenant.withdrawInvitation(invitation.invitationId)
 
-    this._userRepository.add(admin);
+    this._userRepository.add(admin)
 
     let adminRole =
       aTenant.provisionRole(
         "Administrator",
-        "Default " + aTenant.name + " administrator.");
+        "Default " + aTenant.name + " administrator.")
 
-    adminRole.assignUser(admin);
+    adminRole.assignUser(admin)
 
-    this._roleRepository.add(adminRole);
+    this._roleRepository.add(adminRole)
 
     DomainEventPublisher.publish(
       "TenantAdministratorRegistered", {

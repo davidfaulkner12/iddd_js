@@ -1,11 +1,12 @@
 const _ = require("underscore")
 
-const ConcurrencySafeEntity = require("../../common/domain/ConcurrencySafeEntity")
-const DomainEventPublisher = require("../../common/domain/DomainEventPublisher")
+const ConcurrencySafeEntity =
+  require("../../common/domain/ConcurrencySafeEntity")
+const DomainEventPublisher =
+  require("../../common/domain/DomainEventPublisher")
 
 const GroupMemberType = require("./GroupMemberType")
 const GroupMember = require("./GroupMember")
-
 
 class Group extends ConcurrencySafeEntity {
 
@@ -19,11 +20,13 @@ class Group extends ConcurrencySafeEntity {
   }
 
   addUser(aUser) {
-    this.assertArgumentNotNull(aUser, "User must not be null.");
-    this.assertArgumentEquals(this.tenantId, aUser.tenantId, "Wrong tenant for this group.");
-    this.assertArgumentTrue(aUser.enabled, "User is not enabled.");
+    this.assertArgumentNotNull(aUser, "User must not be null.")
+    this.assertArgumentEquals(this.tenantId, aUser.tenantId,
+      "Wrong tenant for this group.")
+    this.assertArgumentTrue(aUser.enabled, "User is not enabled.")
 
-    if (this.groupMembers.push(aUser.toGroupMember()) && !this.isInternalGroup()) {
+    if (this.groupMembers.push(aUser.toGroupMember()) &&
+      !this.isInternalGroup()) {
       DomainEventPublisher
         .publish("GroupUserAdded", {
           tenantId: this.tenantId,
@@ -33,11 +36,13 @@ class Group extends ConcurrencySafeEntity {
     }
   }
 
-
   addGroup(aGroup, aGroupMemberService) {
-    this.assertArgumentNotNull(aGroup, "Group must not be null.");
-    this.assertArgumentEquals(this.tenantId, aGroup.tenantId, "Wrong tenant for this group.");
-    this.assertArgumentFalse(aGroupMemberService.isMemberGroup(aGroup, this.toGroupMember()), "Group recursion.");
+    this.assertArgumentNotNull(aGroup, "Group must not be null.")
+    this.assertArgumentEquals(this.tenantId, aGroup.tenantId,
+      "Wrong tenant for this group.")
+    this.assertArgumentFalse(
+      aGroupMemberService.isMemberGroup(aGroup, this.toGroupMember()),
+      "Group recursion.")
 
     this.groupMembers.push(aGroup.toGroupMember())
 
@@ -56,33 +61,35 @@ class Group extends ConcurrencySafeEntity {
       new GroupMember(
         this.tenantId,
         this.name,
-        GroupMemberType.GROUP);
+        GroupMemberType.GROUP)
 
-    return groupMember;
+    return groupMember
   }
 
   isMember(aUser, aGroupMemberService) {
-    this.assertArgumentNotNull(aUser, "User must not be null.");
-    this.assertArgumentEquals(this.tenantId, aUser.tenantId, "Wrong tenant for this group.");
-    this.assertArgumentTrue(aUser.enabled, "User is not enabled.");
+    this.assertArgumentNotNull(aUser, "User must not be null.")
+    this.assertArgumentEquals(this.tenantId, aUser.tenantId,
+      "Wrong tenant for this group.")
+    this.assertArgumentTrue(aUser.enabled,
+      "User is not enabled.")
 
-    let isMember = !!_.find(this.groupMembers, (member) => {
+    let isMember = Boolean(_.find(this.groupMembers, (member) => {
       return _.isEqual(member, aUser.toGroupMember())
-    })
-
+    }))
 
     if (isMember) {
-      isMember = aGroupMemberService.confirmUser(this, aUser);
+      isMember = aGroupMemberService.confirmUser(this, aUser)
     } else {
-      isMember = aGroupMemberService.isUserInNestedGroup(this, aUser);
+      isMember = aGroupMemberService.isUserInNestedGroup(this, aUser)
     }
 
-    return isMember;
+    return isMember
   }
 
   removeGroup(aGroup) {
-    this.assertArgumentNotNull(aGroup, "Group must not be null.");
-    this.assertArgumentEquals(this.tenantId, aGroup.tenantId, "Wrong tenant for this group.");
+    this.assertArgumentNotNull(aGroup, "Group must not be null.")
+    this.assertArgumentEquals(this.tenantId, aGroup.tenantId,
+      "Wrong tenant for this group.")
 
     let oldLength = this.groupMembers.length
 
@@ -91,8 +98,7 @@ class Group extends ConcurrencySafeEntity {
     })
 
     // not a nested remove, only direct member
-    if (this.groupMembers.length != oldLength && !this.isInternalGroup()) {
-
+    if (this.groupMembers.length !== oldLength && !this.isInternalGroup()) {
       DomainEventPublisher.publish("GroupGroupRemoved", {
         tenantId: this.tenantId,
         name: this.name,
@@ -102,8 +108,9 @@ class Group extends ConcurrencySafeEntity {
   }
 
   removeUser(aUser) {
-    this.assertArgumentNotNull(aUser, "User must not be null.");
-    this.assertArgumentEquals(this.tenantId, aUser.tenantId, "Wrong tenant for this group.");
+    this.assertArgumentNotNull(aUser, "User must not be null.")
+    this.assertArgumentEquals(this.tenantId, aUser.tenantId,
+      "Wrong tenant for this group.")
 
     let oldLength = this.groupMembers.length
 
@@ -112,8 +119,7 @@ class Group extends ConcurrencySafeEntity {
     })
 
     // not a nested remove, only direct member
-    if (this.groupMembers.length != oldLength && !this.isInternalGroup()) {
-
+    if (this.groupMembers.length !== oldLength && !this.isInternalGroup()) {
       DomainEventPublisher.publish("GroupUserRemoved", {
         tenantId: this.tenantId,
         name: this.name,
@@ -129,10 +135,10 @@ class Group extends ConcurrencySafeEntity {
     return aName.startsWith(Group.ROLE_GROUP_PREFIX)
   }
 
-
   set description(aDescription) {
     this.assertArgumentNotEmpty(aDescription, "Group description is required.")
-    this.assertArgumentLength(aDescription, 1, 250, "Group description must be 250 characters or less.")
+    this.assertArgumentLength(aDescription, 1, 250,
+      "Group description must be 250 characters or less.")
 
     this._description = aDescription
   }
@@ -141,13 +147,11 @@ class Group extends ConcurrencySafeEntity {
     return this._description
   }
 
-
   set tenantId(aTenantId) {
-    this.assertArgumentNotNull(aTenantId, "The tenantId must be provided.");
+    this.assertArgumentNotNull(aTenantId, "The tenantId must be provided.")
 
-    this._tenantId = aTenantId;
+    this._tenantId = aTenantId
   }
-
 
   get tenantId() {
     return this._tenantId
@@ -155,24 +159,22 @@ class Group extends ConcurrencySafeEntity {
 
   set name(aName) {
     this.assertArgumentNotEmpty(aName, "Group name is required.")
-    this.assertArgumentLength(aName, 1, 100, "Group name must be 100 characters or less.")
+    this.assertArgumentLength(aName, 1, 100,
+      "Group name must be 100 characters or less.")
 
     if (this.isInternalGroup(aName)) {
       let uuid = aName.substring(Group.ROLE_GROUP_PREFIX.length)
       if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(uuid)) {
         throw new Error("IllegalArgument: The id has an invalid format.")
       }
-
     }
 
-    this._name = aName;
+    this._name = aName
   }
 
   get name() {
     return this._name
   }
-
-
 
 }
 

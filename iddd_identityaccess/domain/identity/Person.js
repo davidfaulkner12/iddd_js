@@ -1,18 +1,12 @@
-const ConcurrencySafeEntity = require("../../common/domain/ConcurrencySafeEntity")
+const ConcurrencySafeEntity =
+  require("../../common/domain/ConcurrencySafeEntity")
 const DomainEventPublisher = require("../../common/domain/DomainEventPublisher")
-const {
-  ContactInformation,
-  FullName,
-  TenantId,
-  User
-} = require("./IdentityValueObjects")
 
 class Person extends ConcurrencySafeEntity {
   constructor(
-    aTenantId,
-    aName,
-    aContactInformation) {
-
+      aTenantId,
+      aName,
+      aContactInformation) {
     super()
 
     this.contactInformation = aContactInformation
@@ -42,7 +36,7 @@ class Person extends ConcurrencySafeEntity {
         tenantId: this.tenantId,
         username: this.user.username,
         name: this.name
-      });
+      })
   }
 
   get contactInformation() {
@@ -66,7 +60,8 @@ class Person extends ConcurrencySafeEntity {
   }
 
   set contactInformation(aContactInformation) {
-    this.assertArgumentNotNull(aContactInformation, "The person contact information is required.")
+    this.assertArgumentNotNull(aContactInformation,
+      "The person contact information is required.")
     this._contactInformation = aContactInformation
   }
 
@@ -79,7 +74,7 @@ class Person extends ConcurrencySafeEntity {
   set tenantId(aTenantId) {
     this.assertArgumentNotNull(aTenantId, "The tenantId is required.")
 
-    this._tenantId = aTenantId;
+    this._tenantId = aTenantId
   }
 }
 

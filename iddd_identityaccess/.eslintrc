@@ -1,6 +1,7 @@
 {
   "extends": "eslint-config-google",
   rules: {
-    semi: ["warn", "never"]
-    }
+    semi: ["warn", "never"],
+    arrow-parens: ["error", "always"]
+  }
 }

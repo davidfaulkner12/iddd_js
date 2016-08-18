@@ -1,7 +1,6 @@
 const _ = require("underscore")
 const AssertionConcern = require("../../common/AssertionConcern")
 
-
 class RemoveUserFromGroupCommand extends AssertionConcern {
   constructor(
 
@@ -24,7 +23,6 @@ class RemoveUserFromGroupCommand extends AssertionConcern {
     this.assertArgumentNotNull(username, "username must be provided.")
     this.assertArgumentTrue(_.isString(username), "username must be a String")
     this._username = username
-
   }
 
   get tenantId() {

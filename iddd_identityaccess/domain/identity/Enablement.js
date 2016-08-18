@@ -6,14 +6,18 @@ class Enablement extends AssertionConcern {
   constructor(anEnabled, aStartDate, anEndDate) {
     super()
 
-    this.assertArgumentTrue(_.isBoolean(anEnabled), "The first argument must be a boolean")
-    this.assertArgumentTrue(aStartDate == null || _.isDate(aStartDate), "The second argument must be a date")
-    this.assertArgumentTrue(anEndDate == null || _.isDate(anEndDate), "The third argument must be a date")
+    this.assertArgumentTrue(_.isBoolean(anEnabled),
+      "The first argument must be a boolean")
+    this.assertArgumentTrue(!aStartDate || _.isDate(aStartDate),
+      "The second argument must be a date")
+    this.assertArgumentTrue(!anEndDate || _.isDate(anEndDate),
+      "The third argument must be a date")
 
-    if (aStartDate != null || anEndDate != null) {
-      this.assertArgumentNotNull(aStartDate, "The start date must be provided.");
-      this.assertArgumentNotNull(anEndDate, "The end date must be provided.");
-      this.assertArgumentFalse(aStartDate > anEndDate, "Enablement start and/or end date is invalid.");
+    if (aStartDate || anEndDate) {
+      this.assertArgumentNotNull(aStartDate, "The start date must be provided.")
+      this.assertArgumentNotNull(anEndDate, "The end date must be provided.")
+      this.assertArgumentFalse(aStartDate > anEndDate,
+        "Enablement start and/or end date is invalid.")
     }
 
     this.enabled = anEnabled
@@ -22,34 +26,33 @@ class Enablement extends AssertionConcern {
   }
 
   isEnablementEnabled() {
-    let enabled = false;
+    let enabled = false
 
     if (this.enabled) {
       if (!this.isTimeExpired()) {
-        enabled = true;
+        enabled = true
       }
     }
 
-    return enabled;
+    return enabled
   }
 
   isTimeExpired() {
-    let timeExpired = false;
-    if (this.startDate != null && this.endDate != null) {
-
-      let now = new Date();
+    let timeExpired = false
+    if (this.startDate && this.endDate) {
+      let now = new Date()
 
       if (now < this.startDate ||
         now > this.endDate) {
-        timeExpired = true;
+        timeExpired = true
       }
     }
 
-    return timeExpired;
+    return timeExpired
   }
 
   static indefiniteEnablement() {
-      return new Enablement(true, null, null);
+    return new Enablement(true, null, null)
   }
 
 }
