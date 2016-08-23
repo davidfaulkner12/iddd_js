@@ -1,60 +1,60 @@
-const _ = require("underscore")
 const AssertionConcern = require("../../common/AssertionConcern")
+const ValueObjectGenerator = require("../../common/ValueObjectGenerator")
 
-class Enablement extends AssertionConcern {
-
-  constructor(anEnabled, aStartDate, anEndDate) {
-    super()
-
-    this.assertArgumentTrue(_.isBoolean(anEnabled),
-      "The first argument must be a boolean")
-    this.assertArgumentTrue(!aStartDate || _.isDate(aStartDate),
-      "The second argument must be a date")
-    this.assertArgumentTrue(!anEndDate || _.isDate(anEndDate),
-      "The third argument must be a date")
-
-    if (aStartDate || anEndDate) {
-      this.assertArgumentNotNull(aStartDate, "The start date must be provided.")
-      this.assertArgumentNotNull(anEndDate, "The end date must be provided.")
-      this.assertArgumentFalse(aStartDate > anEndDate,
-        "Enablement start and/or end date is invalid.")
-    }
-
-    this.enabled = anEnabled
-    this.endDate = anEndDate
-    this.startDate = aStartDate
-  }
-
-  isEnablementEnabled() {
-    let enabled = false
-
-    if (this.enabled) {
-      if (!this.isTimeExpired()) {
-        enabled = true
+const Enablement = ValueObjectGenerator.generate({
+  name: "Enablement",
+  super: AssertionConcern,
+  props: [{
+    name: "enabled",
+    required: true,
+    type: Boolean
+  }, {
+    name: "startDate",
+    type: Date
+  }, {
+    name: "endDate",
+    type: Date,
+    validate(anEndDate, that) {
+      if (that.startDate || anEndDate) {
+        this.assertArgumentNotNull(that.startDate,
+          "The start date must be provided.")
+        this.assertArgumentNotNull(anEndDate, "The end date must be provided.")
+        this.assertArgumentFalse(that.startDate > anEndDate,
+          "Enablement start and/or end date is invalid.")
       }
     }
+  }],
+  methods: {
+    isEnablementEnabled() {
+      let enabled = false
 
-    return enabled
-  }
-
-  isTimeExpired() {
-    let timeExpired = false
-    if (this.startDate && this.endDate) {
-      let now = new Date()
-
-      if (now < this.startDate ||
-        now > this.endDate) {
-        timeExpired = true
+      if (this.enabled) {
+        if (!this.isTimeExpired()) {
+          enabled = true
+        }
       }
+
+      return enabled
+    },
+
+    isTimeExpired() {
+      let timeExpired = false
+      if (this.startDate && this.endDate) {
+        let now = new Date()
+
+        if (now < this.startDate || now > this.endDate) {
+          timeExpired = true
+        }
+      }
+
+      return timeExpired
     }
-
-    return timeExpired
   }
 
-  static indefiniteEnablement() {
-    return new Enablement(true, null, null)
-  }
+})
 
+Enablement.indefiniteEnablement = function() {
+  return new Enablement(true, null, null)
 }
 
 module.exports = Enablement

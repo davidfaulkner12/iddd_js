@@ -153,6 +153,7 @@ class IdentityApplicationService {
   }
 
   defineUserEnablement(aCommand) {
+    console.log("XXXX", aCommand)
     let user = this._existingUser(aCommand.tenantId, aCommand.username)
 
     user.defineEnablement(

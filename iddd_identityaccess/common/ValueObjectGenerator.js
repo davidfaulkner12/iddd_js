@@ -12,7 +12,7 @@ module.exports = {
     let Clazz = function() {
       if (arguments && arguments[0] && Object.getPrototypeOf(arguments[0]) && Object.getPrototypeOf(arguments[0]).name === name) {
         console.log("XXXX Copy constructor!")
-        _.extend(this, arguments[0])
+        _.extendOwn(this, arguments[0])
         return this
       }
       let zipped = _.zip(properties, arguments)
@@ -38,6 +38,13 @@ module.exports = {
         if (required && (value === null || value === undefined)) {
           throw new Error("InvalidArgument: " +
             name + " is a required parameter")
+        }
+
+        if (value !== null && value !== undefined &&
+          propDefinition.type && toString.call(value) !==
+          '[object ' + propDefinition.type.name + ']') {
+          throw new Error("InvalidArgument: " +
+            name + " must be of type " + propDefinition.type.name)
         }
 
         if (propDefinition.validate) {

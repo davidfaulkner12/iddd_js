@@ -188,4 +188,24 @@ describe("ValueObjectGenerator", function() {
 
     myFoo2.a.should.equal("bob")
   })
+
+  it("Should enforce a type check", function() {
+    let Foo = ValueObjectGenerator.generate({
+      name: "Foo",
+      props: [{
+        name: "a",
+        type: String
+      }]
+    })
+
+    let errorOccurred = false
+
+    try {
+      let myFoo = new Foo(34)
+    } catch (err) {
+      errorOccurred = true
+    }
+
+    errorOccurred.should.be.true
+  })
 })

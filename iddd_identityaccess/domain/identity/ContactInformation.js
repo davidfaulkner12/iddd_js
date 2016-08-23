@@ -1,59 +1,43 @@
-const AssertionConcern = require("../../common/AssertionConcern")
+const ValueObjectGenerator = require("../../common/ValueObjectGenerator")
 
-class ContactInformation extends AssertionConcern {
+const ContactInformation = ValueObjectGenerator.generate({
+  name: "ContactInformation",
+  props: ["emailAddress", "postalAddress",
+    "primaryTelephone", "secondaryTelephone"
+  ],
+  methods: {
+    changeEmailAddress(anEmailAddress) {
+      return new ContactInformation(
+        anEmailAddress,
+        this.postalAddress,
+        this.primaryTelephone,
+        this.secondaryTelephone)
+    },
 
-  constructor(anEmailAddress,
-      aPostalAddress,
-      aPrimaryTelephone,
-      aSecondaryTelephone) {
-    super()
+    changePostalAddress(aPostalAddress) {
+      return new ContactInformation(
+        this.emailAddress,
+        aPostalAddress,
+        this.primaryTelephone,
+        this.secondaryTelephone)
+    },
 
-    // TODO Weird stuff
-    if (anEmailAddress instanceof ContactInformation) {
-      let copy = anEmailAddress
-      anEmailAddress = copy.emailAddress
-      aPostalAddress = copy.postalAddress
-      aPrimaryTelephone = copy.primaryTelephone
-      aSecondaryTelephone = copy.secondaryTelephone
+    changePrimaryTelephone(aTelephone) {
+      return new ContactInformation(
+        this.emailAddress,
+        this.postalAddress,
+        aTelephone,
+        this.secondaryTelephone)
+    },
+
+    changeSecondaryTelephone(aTelephone) {
+      return new ContactInformation(
+        this.emailAddress,
+        this.postalAddress,
+        this.primaryTelephone,
+        aTelephone)
     }
-
-    this.emailAddress = anEmailAddress
-    this.postalAddress = aPostalAddress
-    this.primaryTelephone = aPrimaryTelephone
-    this.secondaryTelephone = aSecondaryTelephone
   }
-
-  changeEmailAddress(anEmailAddress) {
-    return new ContactInformation(
-      anEmailAddress,
-      this.postalAddress,
-      this.primaryTelephone,
-      this.secondaryTelephone)
-  }
-
-  changePostalAddress(aPostalAddress) {
-    return new ContactInformation(
-      this.emailAddress,
-      aPostalAddress,
-      this.primaryTelephone,
-      this.secondaryTelephone)
-  }
-
-  changePrimaryTelephone(aTelephone) {
-    return new ContactInformation(
-      this.emailAddress,
-      this.postalAddress,
-      aTelephone,
-      this.secondaryTelephone)
-  }
-
-  changeSecondaryTelephone(aTelephone) {
-    return new ContactInformation(
-      this.emailAddress,
-      this.postalAddress,
-      this.primaryTelephone,
-      aTelephone)
-  }
-}
+})
 
 module.exports = ContactInformation

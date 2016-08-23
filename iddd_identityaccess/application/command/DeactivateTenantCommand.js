@@ -1,23 +1,8 @@
-const _ = require("underscore")
-const AssertionConcern = require("../../common/AssertionConcern")
+const ValueObjectGenerator = require("../../common/ValueObjectGenerator")
 
-
-class DeactivateTenantCommand extends AssertionConcern {
-  constructor(
-
-      tenantId
-  ) {
-    super()
-
-    this.assertArgumentNotNull(tenantId, "tenantId must be provided.")
-    this.assertArgumentTrue(_.isString(tenantId), "tenantId must be a String")
-    this._tenantId = tenantId
-
-  }
-
-  get tenantId() {
-    return this._tenantId
-  }
-}
-
-module.exports = DeactivateTenantCommand
+module.exports = ValueObjectGenerator.generate({
+  name: "DeactivateTenantCommand",
+  props: [
+    {name: "tenantId", type: String, required: true}
+  ]
+})

@@ -5,11 +5,6 @@ const uuid = require("uuid")
 
 const TenantId = require("../../../domain/identity/TenantId")
 
-const FIRST_NAME = "Zoe";
-const LAST_NAME = "Doe";
-const MARRIED_LAST_NAME = "Jones-Doe";
-const WRONG_FIRST_NAME = "Zeo";
-
 describe("TenantId", function() {
 
   it("Should allow you to construct ", function() {
