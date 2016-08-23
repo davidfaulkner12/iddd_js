@@ -5,16 +5,20 @@ module.exports = {
     let name = definition.name
     let properties = definition.props
     let methods = definition.methods
+    let sup = definition.super ? definition.super : null
 
-    // FIXME Really shady here but want to move on with my life
-    let sup = definition.super ? new definition.super() : null
-
+    // This is the generated constructor function
     let Clazz = function() {
-      if (arguments && arguments[0] && Object.getPrototypeOf(arguments[0]) && Object.getPrototypeOf(arguments[0]).name === name) {
-        console.log("XXXX Copy constructor!")
+      // This is pretty fun -- we always have a copy constructor
+      if (arguments && arguments[0] &&
+        Object.getPrototypeOf(arguments[0]) &&
+        Object.getPrototypeOf(arguments[0]).name === name) {
         _.extendOwn(this, arguments[0])
         return this
       }
+
+      // Otherwise, we assume the arguments to the constructor are in the same
+      // order as the property definitions
       let zipped = _.zip(properties, arguments)
       _.each(zipped, (zip) => {
         let [propDefinition, value] = zip
@@ -33,8 +37,6 @@ module.exports = {
           name = propDefinition.name
         }
 
-        console.log(required, propDefinition, value)
-
         if (required && (value === null || value === undefined)) {
           throw new Error("InvalidArgument: " +
             name + " is a required parameter")
@@ -48,21 +50,26 @@ module.exports = {
         }
 
         if (propDefinition.validate) {
-          // FIXME so so so shady
-          propDefinition.validate.apply(sup, [value, this])
+          propDefinition.validate.apply(this, [value, this])
         }
 
         this["_" + name] = value
       })
-      console.log(this)
     }
 
+    // Doing the mixin thing to copy over the super prototype properties
+    if (sup) {
+      Clazz.prototype = Object.create(sup.prototype)
+    }
+
+    // Here we set the name, since we're generating an "anonymous" class
     Object.defineProperty(Clazz.prototype,
       'name', {
         value: name,
         configurable: true
       })
 
+    // Now I create the getters, note no setters
     _.each(properties, (prop) => {
       let propName = _.isString(prop) ? prop : prop.name
       Object.defineProperty(Clazz.prototype, propName, {
@@ -73,6 +80,7 @@ module.exports = {
       })
     })
 
+    // Finally we put the methods in
     _.each(methods, (method, methodName) => {
       Clazz.prototype[methodName] = method
     })
