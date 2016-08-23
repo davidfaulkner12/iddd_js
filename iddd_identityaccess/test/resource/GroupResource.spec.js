@@ -1,4 +1,8 @@
-const should = require("chai").should()
+/* eslint-env node, mocha */
+/* eslint no-new: "off" */
+/* eslint no-unused-expressions: "off" */
+
+require("chai").should()
 const rest = require("restling")
 
 const DomainRegistry = require("../../domain/DomainRegistry")
@@ -8,9 +12,8 @@ const resourceFixture = require("./ResourceFixture")
 const fixture = require("../domain/IdentityAccessFixtures")
 
 describe("GroupResource", function() {
-
   before(function(done) {
-    resourceFixture.startWithRoutes(groupRoutes,done)
+    resourceFixture.startWithRoutes(groupRoutes, done)
   })
 
   after(function(done) {
@@ -32,15 +35,15 @@ describe("GroupResource", function() {
     let tenantId = group.tenantId.id
     let groupName = group.name
 
-    let url = `${resourceFixture.baseUrl}/tenants/${encodeURIComponent(tenantId)}/groups/${encodeURIComponent(groupName)}`
+    let url =
+      `${resourceFixture.baseUrl}/tenants/${encodeURIComponent(tenantId)}/groups/${encodeURIComponent(groupName)}`
 
     console.log(">>> GET: " + url)
 
     rest.get(url)
-      .then(response => {
+      .then((response) => {
         tenantId.should.equal(response.data.tenantId.id)
         groupName.should.equal(response.data.name)
-      }).then(done, err => done(err))
-
+      }).then(done, (err) => done(err))
   })
 })

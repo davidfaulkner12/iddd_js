@@ -1,3 +1,7 @@
+/* eslint-env node, mocha */
+/* eslint no-new: "off" */
+/* eslint no-unused-expressions: "off" */
+
 const chai = require("chai")
 const should = chai.should()
 
@@ -6,7 +10,6 @@ const DomainRegistry = require("../../../domain/DomainRegistry")
 const fixture = require("../IdentityAccessFixtures")
 
 describe("UserRepository", function() {
-
   beforeEach(function() {
     fixture.clean()
   })
@@ -70,5 +73,4 @@ describe("UserRepository", function() {
 
     users.length.should.equal(2)
   })
-
 })

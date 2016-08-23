@@ -1,4 +1,6 @@
 /* eslint-env node, mocha */
+/* eslint no-new: "off" */
+/* eslint no-unused-expressions: "off" */
 
 const chai = require("chai")
 const should = chai.should()
@@ -45,7 +47,7 @@ describe("ValueObjectGenerator", function() {
     let errorOccurred = false
 
     try {
-      let myFoo = new Foo("avalue", "bvalue", "cvalue")
+      new Foo("avalue", "bvalue", "cvalue")
     } catch (err) {
       errorOccurred = true
     }
@@ -67,7 +69,7 @@ describe("ValueObjectGenerator", function() {
     let errorOccurred = false
 
     try {
-      let myFoo = new Foo("a")
+      new Foo("a")
     } catch (err) {
       errorOccurred = true
     }
@@ -110,7 +112,7 @@ describe("ValueObjectGenerator", function() {
     let errorOccurred = false
 
     try {
-      let myFoo = new Foo(1)
+      new Foo(1)
     } catch (err) {
       errorOccurred = true
     }
@@ -118,24 +120,25 @@ describe("ValueObjectGenerator", function() {
     errorOccurred.should.be.true
   })
 
-  it("Should allow for a custom validation method from a superclass", function() {
-    let Foo = ValueObjectGenerator.generate({
-      name: "Foo",
-      super: AssertionConcern,
-      props: [{
-        name: "a",
-        required: true,
-        validate: function(value) {
-          console.log("Here", Object.getPrototypeOf(Object.getPrototypeOf(this)).assertArgumentNotEmpty)
-          this.assertArgumentNotEmpty(value)
-        }
-      }]
-    })
+  it("Should allow for a custom validation method from a superclass",
+    function() {
+      let Foo = ValueObjectGenerator.generate({
+        name: "Foo",
+        super: AssertionConcern,
+        props: [{
+          name: "a",
+          required: true,
+          validate: function(value) {
+            this.assertArgumentNotEmpty(value)
+          }
+        }]
+      })
 
-    let myFoo = new Foo("bob")
+      let myFoo = new Foo("bob")
 
-    myFoo.a.should.equal("bob")
-  })
+      myFoo.a.should.equal("bob")
+    }
+  )
 
   it("Should allow for a custom superclass method that fails", function() {
     let Foo = ValueObjectGenerator.generate({
@@ -152,7 +155,7 @@ describe("ValueObjectGenerator", function() {
     let errorOccurred = false
 
     try {
-      let myFoo = new Foo("")
+      new Foo("")
     } catch (err) {
       errorOccurred = true
     }
@@ -201,7 +204,7 @@ describe("ValueObjectGenerator", function() {
     let errorOccurred = false
 
     try {
-      let myFoo = new Foo(34)
+      new Foo(34)
     } catch (err) {
       errorOccurred = true
     }

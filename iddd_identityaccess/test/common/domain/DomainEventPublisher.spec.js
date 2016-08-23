@@ -1,10 +1,14 @@
-const chai = require("chai")
-const should = chai.should()
+/* eslint-env node, mocha */
+/* eslint no-new: "off" */
+/* eslint no-unused-expressions: "off" */
 
-const DomainEventPublisher = require("../../../common/domain/DomainEventPublisher")
+const chai = require("chai")
+chai.should()
+
+const DomainEventPublisher =
+  require("../../../common/domain/DomainEventPublisher")
 
 describe("DomainEventPublisher", function() {
-
   beforeEach(function() {
     DomainEventPublisher.reset()
   })
@@ -18,7 +22,7 @@ describe("DomainEventPublisher", function() {
   })
 
   it("Should allow for subscription", function() {
-    DomainEventPublisher.subscribe("alpaca", evt => {
+    DomainEventPublisher.subscribe("alpaca", (evt) => {
       // Nothing
     })
   })
@@ -26,7 +30,7 @@ describe("DomainEventPublisher", function() {
   // Now we get to the tests in the thing
   it("Should publish events when publish is called", function(done) {
     DomainEventPublisher.instance().subscribe("TestableDomainEvent",
-      aDomainEvent => {
+      (aDomainEvent) => {
         aDomainEvent.id.should.equal(100)
         "test".should.equal(aDomainEvent.name)
         done()
@@ -44,11 +48,11 @@ describe("DomainEventPublisher", function() {
     let count = 0
 
     DomainEventPublisher.subscribe("TestableDomainEvent",
-      aDomainEvent => {
-        if (count == 1) {
+      (aDomainEvent) => {
+        if (count === 1) {
           aDomainEvent.id.should.equal(200)
           done()
-        } else if (count == 0) {
+        } else if (count === 0) {
           aDomainEvent.id.should.equal(100)
           count++
         } else {
@@ -72,7 +76,7 @@ describe("DomainEventPublisher", function() {
     let p1 = new Promise(
       (resolve, reject) => {
         DomainEventPublisher.subscribe("TestableDomainEvent",
-          aDomainEvent => {
+          (aDomainEvent) => {
             resolve()
           })
       }
@@ -81,7 +85,7 @@ describe("DomainEventPublisher", function() {
     let p2 = new Promise(
       (resolve, reject) => {
         DomainEventPublisher.subscribe("TestableDomainEvent2",
-          aDomainEvent => {
+          (aDomainEvent) => {
             resolve()
           })
       }
@@ -99,10 +103,10 @@ describe("DomainEventPublisher", function() {
     let numEvents = 0
 
     let callback = (aDomainEvent, aDomainEventName) => {
-      if (numEvents == 0) {
+      if (numEvents === 0) {
         aDomainEventName.should.equal("TestableDomainEvent")
         numEvents++
-      } else if (numEvents == 1) {
+      } else if (numEvents === 1) {
         aDomainEventName.should.equal("TestableDomainEvent2")
         done()
       } else {
@@ -116,7 +120,5 @@ describe("DomainEventPublisher", function() {
     DomainEventPublisher.publish("TestableDomainEvent2", {})
 
     DomainEventPublisher._ee.removeListener("*", callback)
-
   })
-
 })

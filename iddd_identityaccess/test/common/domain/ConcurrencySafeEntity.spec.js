@@ -1,26 +1,34 @@
-const ConcurrencySafeEntity = require("../../../common/domain/ConcurrencySafeEntity")
+/* eslint-env node, mocha */
+/* eslint no-new: "off" */
+/* eslint no-unused-expressions: "off" */
+
+const ConcurrencySafeEntity =
+  require("../../../common/domain/ConcurrencySafeEntity")
 
 describe("ConcurrencySafeEntity", function() {
-
   it("Should construct", function() {
-    let cse = new ConcurrencySafeEntity()
+    new ConcurrencySafeEntity()
   })
 
-  it("Should allow us to set the ConcurrencyVersion to the current version", function() {
-    let cse = new ConcurrencySafeEntity()
-    let cv = cse.concurrencyVersion
-    cse.concurrencyVersion = cv
-  })
-
-  it("Should not allow us to set the ConcurrencyVersion to a new value", function() {
-    let cse = new ConcurrencySafeEntity()
-    let cv = cse.concurrencyVersion
-    try {
-      cse.concurrencyVersion = cv + 10
-    } catch (err) {
-      // Do Nothing
-      return
+  it("Should allow us to set the ConcurrencyVersion to the current version",
+    function() {
+      let cse = new ConcurrencySafeEntity()
+      let cv = cse.concurrencyVersion
+      cse.concurrencyVersion = cv
     }
-    throw new Error("Should never reach here")
-  })
+  )
+
+  it("Should not allow us to set the ConcurrencyVersion to a new value",
+    function() {
+      let cse = new ConcurrencySafeEntity()
+      let cv = cse.concurrencyVersion
+      try {
+        cse.concurrencyVersion = cv + 10
+      } catch (err) {
+        // Do Nothing
+        return
+      }
+      throw new Error("Should never reach here")
+    }
+  )
 })

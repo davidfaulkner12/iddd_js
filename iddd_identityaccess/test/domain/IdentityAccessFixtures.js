@@ -1,17 +1,18 @@
+/* eslint-env node, mocha */
+/* eslint no-new: "off" */
+/* eslint no-unused-expressions: "off" */
+
 const {
   ContactInformation,
   EmailAddress,
   PostalAddress,
   Telephone,
-  TenantId,
   Enablement,
   FullName
 } = require("../../domain/identity/IdentityValueObjects")
 const Person = require("../../domain/identity/Person")
 
-const uuid = require("uuid")
 const DomainRegistry = require("../../domain/DomainRegistry")
-const User = require("../../domain/user")
 const Tenant = require("../../domain/identity/Tenant")
 
 const DomainEventPublisher = require("../../common/domain/DomainEventPublisher")
@@ -54,10 +55,9 @@ fixture.contactInformation = function() {
         "80301",
         "US"),
       new Telephone("303-555-1210"),
-      new Telephone("303-555-1212"));
+      new Telephone("303-555-1212"))
   return contactInformation
 }
-
 
 fixture.PASSWORD = "SecretPassword!"
 fixture.TENANT_DESCRIPTION = "This is a test tenant."
@@ -71,9 +71,9 @@ fixture.ROLE_NAME = "Test Role"
 let tempTenant = null
 
 fixture.tenantAggregate = function() {
-  if (tempTenant == null) {
+  if (!tempTenant) {
     let tenantId =
-      DomainRegistry.tenantRepository.nextIdentity();
+      DomainRegistry.tenantRepository.nextIdentity()
 
     tempTenant =
       new Tenant(
@@ -82,25 +82,23 @@ fixture.tenantAggregate = function() {
         fixture.TENANT_DESCRIPTION,
         true)
 
-    DomainRegistry.tenantRepository.add(tempTenant);
+    DomainRegistry.tenantRepository.add(tempTenant)
   }
 
   return tempTenant
 }
 
 fixture.personEntity = function(aTenant) {
-
   let person =
     new Person(
       aTenant.tenantId,
       new FullName("John", "Doe"),
-      fixture.contactInformation());
+      fixture.contactInformation())
 
-  return person;
+  return person
 }
 
 fixture.personEntity2 = function(aTenant) {
-
   let person =
     new Person(
       aTenant.tenantId,
@@ -114,17 +112,16 @@ fixture.personEntity2 = function(aTenant) {
           "80301",
           "US"),
         new Telephone("303-555-1210"),
-        new Telephone("303-555-1212")));
+        new Telephone("303-555-1212")))
 
-  return person;
+  return person
 }
 
 fixture.userAggregate = function() {
-
-  let tenant = this.tenantAggregate();
+  let tenant = this.tenantAggregate()
 
   let registrationInvitation =
-    this.registrationInvitationEntity(tenant);
+    this.registrationInvitationEntity(tenant)
 
   let user =
     tenant.registerUser(
@@ -132,18 +129,16 @@ fixture.userAggregate = function() {
       fixture.USERNAME,
       fixture.PASSWORD,
       new Enablement(true, null, null),
-      fixture.personEntity(tenant));
+      fixture.personEntity(tenant))
 
-  return user;
-
+  return user
 }
 
 fixture.userAggregate2 = function() {
-
-  let tenant = this.tenantAggregate();
+  let tenant = this.tenantAggregate()
 
   let registrationInvitation =
-    this.registrationInvitationEntity(tenant);
+    this.registrationInvitationEntity(tenant)
 
   let user =
     tenant.registerUser(
@@ -151,38 +146,35 @@ fixture.userAggregate2 = function() {
       fixture.USERNAME2,
       fixture.PASSWORD,
       new Enablement(true, null, null),
-      this.personEntity2(tenant));
+      this.personEntity2(tenant))
 
-  return user;
-
+  return user
 }
 
 fixture.registrationInvitationEntity = function(aTenant) {
-
   let registrationInvitation =
     aTenant.offerRegistrationInvitation("Today-and-Tomorrow:" + Math.random())
     .startingOn(fixture.today())
     .until(fixture.tomorrow())
 
   return registrationInvitation
-
 }
 
 fixture.roleAggregate = function(aTenant) {
   return fixture.tenantAggregate()
-    .provisionRole(fixture.ROLE_NAME, "A test role.", true);
+    .provisionRole(fixture.ROLE_NAME, "A test role.", true)
 }
 
-fixture.GROUP_NAME = "Test Group";
+fixture.GROUP_NAME = "Test Group"
 
 fixture.group1Aggregate = function() {
   return fixture.tenantAggregate()
-    .provisionGroup(fixture.GROUP_NAME + " 1", "A test group 1.");
+    .provisionGroup(fixture.GROUP_NAME + " 1", "A test group 1.")
 }
 
 fixture.group2Aggregate = function() {
   return fixture.tenantAggregate()
-    .provisionGroup(fixture.GROUP_NAME + " 2", "A test group 2.");
+    .provisionGroup(fixture.GROUP_NAME + " 2", "A test group 2.")
 }
 
 fixture.clean = function() {

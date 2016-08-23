@@ -1,7 +1,9 @@
-const chai = require("chai")
-const should = chai.should()
+/* eslint-env node, mocha */
+/* eslint no-new: "off" */
+/* eslint no-unused-expressions: "off" */
 
-//const Enablement = require("../../../domain/identity/Enablement")
+const chai = require("chai")
+chai.should()
 
 const DomainEventPublisher = require("../../../common/domain/DomainEventPublisher")
 
@@ -12,7 +14,6 @@ const Role = require("../../../domain/access/Role")
 const fixture = require("../IdentityAccessFixtures")
 
 describe("Role", function() {
-
   beforeEach(function() {
     fixture.clean()
   })
@@ -22,82 +23,83 @@ describe("Role", function() {
   })
 
   it("ProvisionRole", function() {
-    let tenant = fixture.tenantAggregate();
-    let role = tenant.provisionRole("Manager", "A manager role.");
-    DomainRegistry.roleRepository.add(role);
-    DomainRegistry.roleRepository.allRoles(tenant.tenantId).length.should.equal(1)
+    let tenant = fixture.tenantAggregate()
+    let role = tenant.provisionRole("Manager", "A manager role.")
+    DomainRegistry.roleRepository.add(role)
+    DomainRegistry.roleRepository
+      .allRoles(tenant.tenantId).length.should.equal(1)
   })
 
   it("RoleUniqueness", function() {
-    let tenant = fixture.tenantAggregate();
-    let role1 = tenant.provisionRole("Manager", "A manager role.");
-    DomainRegistry.roleRepository.add(role1);
+    let tenant = fixture.tenantAggregate()
+    let role1 = tenant.provisionRole("Manager", "A manager role.")
+    DomainRegistry.roleRepository.add(role1)
 
-    let nonUnique = false;
+    let nonUnique = false
 
     try {
-      let role2 = tenant.provisionRole("Manager", "A manager role.");
-      DomainRegistry.roleRepository.add(role2);
+      let role2 = tenant.provisionRole("Manager", "A manager role.")
+      DomainRegistry.roleRepository.add(role2)
 
-      fail("Should have thrown exception for nonuniqueness.");
-
+      false.should.be.true
     } catch (err) {
-      nonUnique = true;
+      nonUnique = true
     }
 
     nonUnique.should.be.true
   })
 
   it("UserIsInRole", function() {
-    let tenant = fixture.tenantAggregate();
-    let user = fixture.userAggregate();
-    DomainRegistry.userRepository.add(user);
-    let managerRole = tenant.provisionRole("Manager", "A manager role.", true);
-    let group = new Group(user.tenantId, "Managers", "A group of managers.");
-    DomainRegistry.groupRepository.add(group);
-    managerRole.assignGroup(group, DomainRegistry.groupMemberService);
-    DomainRegistry.roleRepository.add(managerRole);
-    group.addUser(user);
+    let tenant = fixture.tenantAggregate()
+    let user = fixture.userAggregate()
+    DomainRegistry.userRepository.add(user)
+    let managerRole = tenant.provisionRole("Manager", "A manager role.", true)
+    let group = new Group(user.tenantId, "Managers", "A group of managers.")
+    DomainRegistry.groupRepository.add(group)
+    managerRole.assignGroup(group, DomainRegistry.groupMemberService)
+    DomainRegistry.roleRepository.add(managerRole)
+    group.addUser(user)
 
     group.isMember(user, DomainRegistry.groupMemberService).should.be.true
     managerRole.isInRole(user, DomainRegistry.groupMemberService).should.be.true
   })
 
   it("UserIsNotInRole", function() {
-    let tenant = fixture.tenantAggregate();
-    let user = fixture.userAggregate();
-    DomainRegistry.userRepository.add(user);
-    let managerRole = tenant.provisionRole("Manager", "A manager role.", true);
-    let group = tenant.provisionGroup("Managers", "A group of managers.");
-    DomainRegistry.groupRepository.add(group);
-    managerRole.assignGroup(group, DomainRegistry.groupMemberService);
-    DomainRegistry.roleRepository.add(managerRole);
-    let accountantRole = new Role(user.tenantId, "Accountant", "An accountant role.");
-    DomainRegistry.roleRepository.add(accountantRole);
+    let tenant = fixture.tenantAggregate()
+    let user = fixture.userAggregate()
+    DomainRegistry.userRepository.add(user)
+    let managerRole = tenant.provisionRole("Manager", "A manager role.", true)
+    let group = tenant.provisionGroup("Managers", "A group of managers.")
+    DomainRegistry.groupRepository.add(group)
+    managerRole.assignGroup(group, DomainRegistry.groupMemberService)
+    DomainRegistry.roleRepository.add(managerRole)
+    let accountantRole = new Role(user.tenantId,
+      "Accountant", "An accountant role.")
+    DomainRegistry.roleRepository.add(accountantRole)
 
-    managerRole.isInRole(user, DomainRegistry.groupMemberService).should.be.false
-    accountantRole.isInRole(user, DomainRegistry.groupMemberService).should.be.false
+    managerRole.isInRole(user, DomainRegistry.groupMemberService)
+      .should.be.false
+    accountantRole.isInRole(user, DomainRegistry.groupMemberService)
+      .should.be.false
   })
 
   it("NoRoleInternalGroupsInFindGroupByName", function(done) {
-    let tenant = fixture.tenantAggregate();
-    let roleA = tenant.provisionRole("RoleA", "A role of A.");
-    DomainRegistry.roleRepository.add(roleA);
+    let tenant = fixture.tenantAggregate()
+    let roleA = tenant.provisionRole("RoleA", "A role of A.")
+    DomainRegistry.roleRepository.add(roleA)
 
-    let error = false;
+    let error = false
 
     try {
-
       DomainRegistry
         .groupRepository()
         .groupNamed(
           tenant.tenantId,
-          roleA.group().name());
+          roleA.group().name())
 
-      done("Should have thrown exception for invalid group name.");
-
+      done("Should have thrown exception for invalid group name.")
     } catch (err) {
-      error = true;
+      error = true
     }
 
     error.should.be.true
@@ -105,11 +107,8 @@ describe("Role", function() {
   })
 
   it("InternalGroupAddedEventsNotPublished", function() {
-
     let roleSomethingAssignedCount = 0
     let groupSomethingAddedCount = 0
-
-    // TODO Much harder to handle with promises here
 
     DomainEventPublisher.subscribe("GroupAssignedToRole", (evt) => {
       ++roleSomethingAssignedCount
@@ -127,27 +126,24 @@ describe("Role", function() {
       ++groupSomethingAddedCount
     })
 
-    let tenant = fixture.tenantAggregate();
-    let user = fixture.userAggregate();
-    DomainRegistry.userRepository.add(user);
-    let managerRole = tenant.provisionRole("Manager", "A manager role.", true);
-    let group = new Group(user.tenantId, "Managers", "A group of managers.");
-    DomainRegistry.groupRepository.add(group);
-    managerRole.assignGroup(group, DomainRegistry.groupMemberService);
-    managerRole.assignUser(user);
-    DomainRegistry.roleRepository.add(managerRole);
-    group.addUser(user); // legal add
+    let tenant = fixture.tenantAggregate()
+    let user = fixture.userAggregate()
+    DomainRegistry.userRepository.add(user)
+    let managerRole = tenant.provisionRole("Manager", "A manager role.", true)
+    let group = new Group(user.tenantId, "Managers", "A group of managers.")
+    DomainRegistry.groupRepository.add(group)
+    managerRole.assignGroup(group, DomainRegistry.groupMemberService)
+    managerRole.assignUser(user)
+    DomainRegistry.roleRepository.add(managerRole)
+    group.addUser(user) // legal add
 
     roleSomethingAssignedCount.should.equal(2)
     groupSomethingAddedCount.should.equal(1)
   })
 
   it("InternalGroupRemovedEventsNotPublished", function() {
-
     let roleSomethingUnassignedCount = 0
     let groupSomethingRemovedCount = 0
-
-    // TODO Much harder to handle with promises here
 
     DomainEventPublisher.subscribe("GroupUnassignedFromRole", (evt) => {
       ++roleSomethingUnassignedCount
@@ -165,18 +161,18 @@ describe("Role", function() {
       ++groupSomethingRemovedCount
     })
 
-    let tenant = fixture.tenantAggregate();
-    let user = fixture.userAggregate();
-    DomainRegistry.userRepository.add(user);
-    let managerRole = tenant.provisionRole("Manager", "A manager role.", true);
-    let group = new Group(user.tenantId, "Managers", "A group of managers.");
-    DomainRegistry.groupRepository.add(group);
-    managerRole.assignUser(user);
-    managerRole.assignGroup(group, DomainRegistry.groupMemberService);
-    DomainRegistry.roleRepository.add(managerRole);
+    let tenant = fixture.tenantAggregate()
+    let user = fixture.userAggregate()
+    DomainRegistry.userRepository.add(user)
+    let managerRole = tenant.provisionRole("Manager", "A manager role.", true)
+    let group = new Group(user.tenantId, "Managers", "A group of managers.")
+    DomainRegistry.groupRepository.add(group)
+    managerRole.assignUser(user)
+    managerRole.assignGroup(group, DomainRegistry.groupMemberService)
+    DomainRegistry.roleRepository.add(managerRole)
 
-    managerRole.unassignUser(user);
-    managerRole.unassignGroup(group);
+    managerRole.unassignUser(user)
+    managerRole.unassignGroup(group)
 
     roleSomethingUnassignedCount.should.equal(2)
     groupSomethingRemovedCount.should.equal(0)

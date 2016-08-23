@@ -1,25 +1,28 @@
-const chai = require("chai")
-const should = chai.should()
+/* eslint-env node, mocha */
+/* eslint no-new: "off" */
+/* eslint no-unused-expressions: "off" */
 
-const _ = require("underscore")
+const chai = require("chai")
+chai.should()
 
 const {
   NotificationLogFactory,
   NotificationLogId
 } = require("../../common/notification/Notifications")
 
-const ApplicationServiceRegistry = require("../../application/ApplicationServiceRegistry")
+const ApplicationServiceRegistry =
+  require("../../application/ApplicationServiceRegistry")
 
 describe("NotificationApplicationService", function() {
-
   beforeEach(function() {
     this.notificationApplicationService =
       ApplicationServiceRegistry
-      .notificationApplicationService;
+      .notificationApplicationService
 
-    this.eventStore = this.notificationApplicationService.eventStore;
+    this.eventStore = this.notificationApplicationService.eventStore
 
-    this.notificationPublisher = this.notificationApplicationService.notificationPublisher;
+    this.notificationPublisher =
+      this.notificationApplicationService.notificationPublisher
 
     for (let idx = 1; idx <= 31; ++idx) {
       this.eventStore.append("TestableDomainEvent", {
@@ -39,32 +42,35 @@ describe("NotificationApplicationService", function() {
 
   it("CurrentNotificationLog", function() {
     let log =
-      this.notificationApplicationService.currentNotificationLog();
+      this.notificationApplicationService.currentNotificationLog()
 
-    NotificationLogFactory.notificationsPerLog().should.be.at.least(log.totalNotifications())
-    this.eventStore.countStoredEvents().should.be.at.least(log.totalNotifications())
+    NotificationLogFactory.notificationsPerLog().should.be.at.least(
+      log.totalNotifications())
+    this.eventStore.countStoredEvents().should.be.at.least(
+      log.totalNotifications())
     log.hasNextNotificationLog().should.be.false
     log.hasPreviousNotificationLog().should.be.true
     log.isArchived().should.be.false
   })
 
   it("NotificationLog", function() {
-    let id = NotificationLogId.first(NotificationLogFactory.notificationsPerLog());
+    let id = NotificationLogId.first(
+      NotificationLogFactory.notificationsPerLog())
 
-    let log = this.notificationApplicationService.notificationLog(id.encoded());
+    let log = this.notificationApplicationService.notificationLog(id.encoded())
 
-    NotificationLogFactory.notificationsPerLog().should.equal(log.totalNotifications())
-    this.eventStore.countStoredEvents().should.be.at.least(log.totalNotifications())
+    NotificationLogFactory.notificationsPerLog().should.equal(
+      log.totalNotifications())
+    this.eventStore.countStoredEvents().should.be.at.least(
+      log.totalNotifications())
     log.hasNextNotificationLog().should.be.true
     log.hasPreviousNotificationLog().should.be.false
     log.isArchived().should.be.true
   })
 
   it("PublishNotifications", function() {
-    this.notificationApplicationService.publishNotifications();
+    this.notificationApplicationService.publishNotifications()
 
     this.notificationPublisher.internalOnlyTestConfirmation().should.be.true
   })
-
-
 })

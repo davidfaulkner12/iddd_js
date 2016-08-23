@@ -1,3 +1,7 @@
+/* eslint-env node, mocha */
+/* eslint no-new: "off" */
+/* eslint no-unused-expressions: "off" */
+
 const chai = require("chai")
 const should = chai.should()
 
@@ -7,7 +11,7 @@ const {
 
 const TenantRepository = require("../../../domain/identity/TenantRepository")
 
-const tenantRepository = new TenantRepository
+const tenantRepository = new TenantRepository()
 
 describe("ActivateTentantCommand", function() {
   it("Is creatable", function() {
@@ -19,7 +23,7 @@ describe("ActivateTentantCommand", function() {
   it("Should not allow a null command to be created", function() {
     let errorOccured = false
     try {
-      let myActivateTenantCommand = new ActivateTenantCommand()
+      new ActivateTenantCommand()
     } catch (err) {
       errorOccured = true
     }
@@ -29,7 +33,7 @@ describe("ActivateTentantCommand", function() {
   it("Should not allow a numeric argument", function() {
     let errorOccured = false
     try {
-      let myActivateTenantCommand = new ActivateTenantCommand(4)
+      new ActivateTenantCommand(4)
     } catch (err) {
       errorOccured = true
     }

@@ -1,16 +1,18 @@
-const should = require("chai").should()
+/* eslint-env node, mocha */
+/* eslint no-new: "off" */
+/* eslint no-unused-expressions: "off" */
+
+require("chai").should()
 const rest = require("restling")
 
-const DomainRegistry = require("../../domain/DomainRegistry")
 const tenantRoutes = require("../../resource/TenantRoutes")
 
 const resourceFixture = require("./ResourceFixture")
 const fixture = require("../domain/IdentityAccessFixtures")
 
 describe("TenantResource", function() {
-
   before(function(done) {
-    resourceFixture.startWithRoutes(tenantRoutes,done)
+    resourceFixture.startWithRoutes(tenantRoutes, done)
   })
 
   after(function(done) {
@@ -30,15 +32,15 @@ describe("TenantResource", function() {
 
     let tenantId = tenant.tenantId.id
 
-    let url = `${resourceFixture.baseUrl}/tenants/${encodeURIComponent(tenantId)}`
+    let url =
+      `${resourceFixture.baseUrl}/tenants/${encodeURIComponent(tenantId)}`
 
     console.log(">>> GET: " + url)
 
     rest.get(url)
-      .then(response => {
+      .then((response) => {
         console.log(response.data)
         tenantId.should.equal(response.data.tenantId.id)
-      }).then(done, err => done(err))
-
+      }).then(done, (err) => done(err))
   })
 })

@@ -1,23 +1,26 @@
+/* eslint-env node, mocha */
+/* eslint no-new: "off" */
+/* eslint no-unused-expressions: "off" */
+
 const should = require("chai").should()
 const rest = require("restling")
 
 const _ = require("underscore")
 
-const ApplicationServiceRegistry = require("../../application/ApplicationServiceRegistry")
+const ApplicationServiceRegistry =
+  require("../../application/ApplicationServiceRegistry")
 const {
   RegisterUserCommand,
   ChangeEmailAddressCommand,
   ProvisionTenantCommand
 } = require("../../application/command/Commands")
 const DomainEventPublisher = require("../../common/domain/DomainEventPublisher")
-const DomainRegistry = require("../../domain/DomainRegistry")
 const notificationRoutes = require("../../resource/NotificationRoutes")
 
 const resourceFixture = require("./ResourceFixture")
 const fixture = require("../domain/IdentityAccessFixtures")
 
 describe("notificationResource", function() {
-
   before(function(done) {
     resourceFixture.startWithRoutes(notificationRoutes, done)
   })
@@ -47,8 +50,7 @@ describe("notificationResource", function() {
     let url = `${resourceFixture.baseUrl}/notifications`
 
     rest.get(url)
-      .then(response => {
-        //console.log("Response:", response.data)
+      .then((response) => {
         _.each(response.data.notifications, (notification) => {
           let typeName = notification.typeName
           let expectedTypes = typeName.endsWith("UserRegistered") ||
@@ -56,9 +58,8 @@ describe("notificationResource", function() {
             typeName.endsWith("UserPasswordChanged")
 
           expectedTypes.should.be.true
-
         })
-      }).then(done, err => done(err))
+      }).then(done, (err) => done(err))
   })
 
   it("PersonContactInformationChangedNotification", function(done) {
@@ -75,7 +76,7 @@ describe("notificationResource", function() {
     let url = `${resourceFixture.baseUrl}/notifications`
 
     rest.get(url)
-      .then(response => {
+      .then((response) => {
         let log = response.data
 
         log.archived.should.be.false
@@ -89,11 +90,9 @@ describe("notificationResource", function() {
 
         contactNotification.event.contactInformation.emailAddress.address
           .should.equal(fixture.USER_EMAIL_ADDRESS2)
-
-
-      }).then(done, err => done(err))
-
+      }).then(done, (err) => done(err))
   })
+
   it("TenantProvisionedNotification", function(done) {
     let newTenant =
       ApplicationServiceRegistry
@@ -117,7 +116,7 @@ describe("notificationResource", function() {
     let url = `${resourceFixture.baseUrl}/notifications`
 
     rest.get(url)
-      .then(response => {
+      .then((response) => {
         let log = response.data
         log.archived.should.be.false
         should.exist(log.id)
@@ -130,16 +129,14 @@ describe("notificationResource", function() {
 
         tenantNotification.event.tenantId.id
           .should.equal(newTenant.tenantId.id)
-
-
-      }).then(done, err => done(err))
+      }).then(done, (err) => done(err))
   })
 
   it("NotificationNavigation", function(done) {
     let url = `${resourceFixture.baseUrl}/notifications`
 
     rest.get(url)
-      .then(response => {
+      .then((response) => {
         let log = response.data
         log.archived.should.be.false
         should.exist(log.id)
@@ -148,7 +145,7 @@ describe("notificationResource", function() {
         should.exist(log.previousLink)
 
         return rest.get(log.previousLink)
-      }).then(response => {
+      }).then((response) => {
         let log = response.data
         log.archived.should.be.true
         should.exist(log.id)
@@ -156,25 +153,24 @@ describe("notificationResource", function() {
         should.exist(log.selfLink)
 
         return rest.get(log.nextLink)
-      }).then(response => {
+      }).then((response) => {
         let log = response.data
         log.archived.should.be.false
         should.exist(log.id)
         should.not.exist(log.nextLink)
         should.exist(log.selfLink)
-      }).then(done, err => done(err))
+      }).then(done, (err) => done(err))
   })
 })
 
 function generateUserEvents() {
-  let tenant = fixture.tenantAggregate();
-  let person = fixture.userAggregate().person;
+  let tenant = fixture.tenantAggregate()
+  let person = fixture.userAggregate().person
 
   let invitationId =
     tenant.allAvailableRegistrationInvitations()[0].invitationId
 
   for (let idx = 0; idx < 25; ++idx) {
-
     let user =
       ApplicationServiceRegistry
       .identityApplicationService
@@ -196,9 +192,9 @@ function generateUserEvents() {
           person.contactInformation.postalAddress.city,
           person.contactInformation.postalAddress.stateProvince,
           person.contactInformation.postalAddress.postalCode,
-          person.contactInformation.postalAddress.countryCode));
+          person.contactInformation.postalAddress.countryCode))
 
-    if ((idx % 2) == 0) {
+    if ((idx % 2) === 0) {
       let event = {
         tenantId: user.tenantId,
         username: user.username,
@@ -208,10 +204,11 @@ function generateUserEvents() {
       }
 
       ApplicationServiceRegistry
-        .notificationApplicationService.eventStore.append("PersonNameChanged", event);
+        .notificationApplicationService.eventStore
+        .append("PersonNameChanged", event)
     }
 
-    if ((idx % 3) == 0) {
+    if ((idx % 3) === 0) {
       let event = {
         tenantId: user.tenantId,
         username: user.username,
@@ -220,9 +217,10 @@ function generateUserEvents() {
       }
 
       ApplicationServiceRegistry
-        .notificationApplicationService.eventStore.append("UserPasswordChanged", event)
+        .notificationApplicationService.eventStore
+        .append("UserPasswordChanged", event)
     }
 
-    DomainEventPublisher.reset();
+    DomainEventPublisher.reset()
   }
 }

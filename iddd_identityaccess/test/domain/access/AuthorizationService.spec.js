@@ -1,14 +1,15 @@
-const chai = require("chai")
-const should = chai.should()
+/* eslint-env node, mocha */
+/* eslint no-new: "off" */
+/* eslint no-unused-expressions: "off" */
 
-//const Enablement = require("../../../domain/identity/Enablement")
+const chai = require("chai")
+chai.should()
 
 const DomainRegistry = require("../../../domain/DomainRegistry")
 
 const fixture = require("../IdentityAccessFixtures")
 
 describe("AuthorizationService", function() {
-
   beforeEach(function() {
     fixture.clean()
   })
@@ -18,57 +19,55 @@ describe("AuthorizationService", function() {
   })
 
   it("UserInRoleAuthorization", function() {
+    let tenant = fixture.tenantAggregate()
+    let user = fixture.userAggregate()
+    DomainRegistry.userRepository.add(user)
+    let managerRole = tenant.provisionRole("Manager", "A manager role.", true)
 
-    let tenant = fixture.tenantAggregate();
-    let user = fixture.userAggregate();
-    DomainRegistry.userRepository.add(user);
-    let managerRole = tenant.provisionRole("Manager", "A manager role.", true);
-
-    managerRole.assignUser(user);
+    managerRole.assignUser(user)
 
     DomainRegistry
       .roleRepository
-      .add(managerRole);
+      .add(managerRole)
 
     let authorized =
       DomainRegistry
       .authorizationService
-      .isUserInRole(user, "Manager");
+      .isUserInRole(user, "Manager")
 
     authorized.should.be.true
 
     authorized =
       DomainRegistry
       .authorizationService
-      .isUserInRole(user, "Director");
+      .isUserInRole(user, "Director")
 
     authorized.should.be.false
   })
 
   it("UsernameInRoleAuthorization", function() {
+    let tenant = fixture.tenantAggregate()
+    let user = fixture.userAggregate()
+    DomainRegistry.userRepository.add(user)
+    let managerRole = tenant.provisionRole("Manager", "A manager role.", true)
 
-    let tenant = fixture.tenantAggregate();
-    let user = fixture.userAggregate();
-    DomainRegistry.userRepository.add(user);
-    let managerRole = tenant.provisionRole("Manager", "A manager role.", true);
-
-    managerRole.assignUser(user);
+    managerRole.assignUser(user)
 
     DomainRegistry
       .roleRepository
-      .add(managerRole);
+      .add(managerRole)
 
     let authorized =
       DomainRegistry
       .authorizationService
-      .isUserInRoleByUsername(tenant.tenantId, user.username, "Manager");
+      .isUserInRoleByUsername(tenant.tenantId, user.username, "Manager")
 
     authorized.should.be.true
 
     authorized =
       DomainRegistry
       .authorizationService
-      .isUserInRole(tenant.tenantId, user.username, "Director");
+      .isUserInRole(tenant.tenantId, user.username, "Director")
 
     authorized.should.be.false
   })

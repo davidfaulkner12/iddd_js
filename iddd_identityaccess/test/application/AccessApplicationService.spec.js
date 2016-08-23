@@ -1,10 +1,14 @@
+/* eslint-env node, mocha */
+/* eslint no-new: "off" */
+/* eslint no-unused-expressions: "off" */
+
 const chai = require("chai")
 const should = chai.should()
 
 const DomainRegistry = require("../../domain/DomainRegistry")
-const ApplicationServiceRegistry = require("../../application/ApplicationServiceRegistry")
+const ApplicationServiceRegistry =
+  require("../../application/ApplicationServiceRegistry")
 
-// TODO Maybe this doesn't work anymore?
 const fixture = require("../domain/IdentityAccessFixtures")
 
 const {
@@ -12,7 +16,6 @@ const {
 } = require("../../application/command/Commands")
 
 describe("AccessApplicationService", function() {
-
   beforeEach(function() {
     fixture.clean()
   })
@@ -22,11 +25,11 @@ describe("AccessApplicationService", function() {
   })
 
   it("AssignUserToRole", function() {
-    let user = fixture.userAggregate();
-    DomainRegistry.userRepository.add(user);
+    let user = fixture.userAggregate()
+    DomainRegistry.userRepository.add(user)
 
-    let role = fixture.roleAggregate();
-    DomainRegistry.roleRepository.add(role);
+    let role = fixture.roleAggregate()
+    DomainRegistry.roleRepository.add(role)
 
     role.isInRole(user, DomainRegistry.groupMemberService).should.be.false
 
@@ -36,17 +39,17 @@ describe("AccessApplicationService", function() {
         new AssignUserToRoleCommand(
           user.tenantId.id,
           user.username,
-          role.name));
+          role.name))
 
     role.isInRole(user, DomainRegistry.groupMemberService).should.be.true
   })
 
   it("IsUserInRole", function() {
-    let user = fixture.userAggregate();
-    DomainRegistry.userRepository.add(user);
+    let user = fixture.userAggregate()
+    DomainRegistry.userRepository.add(user)
 
-    let role = fixture.roleAggregate();
-    DomainRegistry.roleRepository.add(role);
+    let role = fixture.roleAggregate()
+    DomainRegistry.roleRepository.add(role)
 
     ApplicationServiceRegistry
       .accessApplicationService
@@ -61,7 +64,7 @@ describe("AccessApplicationService", function() {
         new AssignUserToRoleCommand(
           user.tenantId.id,
           user.username,
-          role.name));
+          role.name))
 
     ApplicationServiceRegistry
       .accessApplicationService
@@ -72,17 +75,16 @@ describe("AccessApplicationService", function() {
   })
 
   it("UserInRole", function() {
-    let user = fixture.userAggregate();
-    DomainRegistry.userRepository.add(user);
+    let user = fixture.userAggregate()
+    DomainRegistry.userRepository.add(user)
 
-    let role = fixture.roleAggregate();
-    DomainRegistry.roleRepository.add(role);
-
+    let role = fixture.roleAggregate()
+    DomainRegistry.roleRepository.add(role)
 
     let userNotInRole =
       ApplicationServiceRegistry
       .accessApplicationService
-      .userInRole(user.tenantId.id, user.username, role.name);
+      .userInRole(user.tenantId.id, user.username, role.name)
 
     should.not.exist(userNotInRole)
 
@@ -92,15 +94,13 @@ describe("AccessApplicationService", function() {
         new AssignUserToRoleCommand(
           user.tenantId.id,
           user.username,
-          role.name));
+          role.name))
 
     let userInRole =
       ApplicationServiceRegistry
       .accessApplicationService
-      .userInRole(user.tenantId.id, user.username, role.name);
+      .userInRole(user.tenantId.id, user.username, role.name)
 
-    should.exist(userInRole);
+    should.exist(userInRole)
   })
-
-
 })

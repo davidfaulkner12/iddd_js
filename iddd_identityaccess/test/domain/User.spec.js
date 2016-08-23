@@ -1,9 +1,12 @@
+/* eslint-env node, mocha */
+/* eslint no-new: "off" */
+/* eslint no-unused-expressions: "off" */
+
 const chai = require("chai")
 const should = chai.should()
 
 const _ = require("underscore")
 
-const User = require("../../domain/user")
 const DomainEventPublisher = require("../../common/domain/DomainEventPublisher")
 
 const {
@@ -18,7 +21,6 @@ const {
 const fixture = require("./IdentityAccessFixtures")
 
 describe("User", function() {
-
   beforeEach(function() {
     fixture.clean()
   })
@@ -36,7 +38,7 @@ describe("User", function() {
   it("Should allow a user to disabled", function(done) {
     let user = fixture.userAggregate()
 
-    DomainEventPublisher.subscribe( "UserEnablementChanged", (aDomainEvent) => {
+    DomainEventPublisher.subscribe("UserEnablementChanged", (aDomainEvent) => {
       aDomainEvent.username.should.equal(user.username)
       done()
     })
@@ -46,31 +48,42 @@ describe("User", function() {
     user.enabled.should.be.false
   })
 
-  it("Should allow a user to be disabled with start and end dates", function(done) {
-    let user = fixture.userAggregate()
+  it("Should allow a user to be disabled with start and end dates",
+    function(done) {
+      let user = fixture.userAggregate()
 
-    DomainEventPublisher.subscribe("UserEnablementChanged", (aDomainEvent) => {
-      aDomainEvent.username.should.equal(user.username)
-      done()
-    })
+      DomainEventPublisher.subscribe("UserEnablementChanged",
+      (aDomainEvent) => {
+        aDomainEvent.username.should.equal(user.username)
+        done()
+      }
+    )
 
-    user.defineEnablement(new Enablement(false, fixture.today(), fixture.tomorrow()))
+      user.defineEnablement(
+        new Enablement(false, fixture.today(), fixture.tomorrow()))
 
-    user.enabled.should.be.false
-  })
+      user.enabled.should.be.false
+    }
+  )
 
-  it("Should allow a user to be disabled with outside start and end dates", function(done) {
-    let user = fixture.userAggregate()
+  it("Should allow a user to be disabled with outside start and end dates",
+    function(done) {
+      let user = fixture.userAggregate()
 
-    DomainEventPublisher.subscribe("UserEnablementChanged", (aDomainEvent) => {
-      aDomainEvent.username.should.equal(user.username)
-      done()
-    })
+      DomainEventPublisher.subscribe("UserEnablementChanged",
+      (aDomainEvent) => {
+        aDomainEvent.username.should.equal(user.username)
+        done()
+      })
 
-    user.defineEnablement(new Enablement(false, fixture.dayBeforeYesterday(), fixture.yesterday()))
+      user.defineEnablement(
+        new Enablement(false,
+          fixture.dayBeforeYesterday(),
+          fixture.yesterday()))
 
-    user.enabled.should.be.false
-  })
+      user.enabled.should.be.false
+    }
+  )
 
   it("Should not allow enablement with unsequenced dates", function(done) {
     let user = fixture.userAggregate()
@@ -83,9 +96,12 @@ describe("User", function() {
     })
 
     try {
-      user.defineEnablement(new Enablement(false, fixture.yesterday(), fixture.dayBeforeYesterday()))
+      user.defineEnablement(
+        new Enablement(false,
+          fixture.yesterday(),
+          fixture.dayBeforeYesterday()))
     } catch (err) {
-      /// Good!
+      // Good!
       failure = true
     }
 
@@ -133,47 +149,50 @@ describe("User", function() {
   it("Should hash user password on construction", function() {
     let user = fixture.userAggregate()
 
-    fixture.PASSWORD.should.not.equal(user.internalAccessOnlyEncryptedPassword())
+    fixture.PASSWORD.should.not.equal(
+      user.internalAccessOnlyEncryptedPassword())
   })
 
   it("Should hash password on change", function() {
     let user = fixture.userAggregate()
 
-    // TODO String strongPassword = DomainRegistry.passwordService().generateStrongPassword();
-    //   user.changePassword(fixture.PASSWORD, strongPassword);
-
     user.changePassword(fixture.PASSWORD, "ThisIsANewPassword")
 
-    fixture.PASSWORD.should.not.equal(user.internalAccessOnlyEncryptedPassword())
-      // assertFalse(strongPassword.equals(user.password()));
-    "ThisIsANewPassword".should.not.equal(user.internalAccessOnlyEncryptedPassword())
-
+    fixture.PASSWORD.should.not.equal(
+      user.internalAccessOnlyEncryptedPassword())
+    "ThisIsANewPassword".should.not.equal(
+      user.internalAccessOnlyEncryptedPassword())
   })
 
-  it("Should allow user personal contact information to change", function(done) {
-    let user = fixture.userAggregate()
+  it("Should allow user personal contact information to change",
+    function(done) {
+      let user = fixture.userAggregate()
 
-    DomainEventPublisher.subscribe("PersonContactInformationChanged", (aDomainEvent) => {
-      aDomainEvent.username.should.equal(user.username)
-      done()
-    })
+      DomainEventPublisher.subscribe("PersonContactInformationChanged",
+      (aDomainEvent) => {
+        aDomainEvent.username.should.equal(user.username)
+        done()
+      })
 
-    user.changePersonalContactInformation(
-      new ContactInformation(
-        new EmailAddress(fixture.USER_EMAIL_ADDRESS2),
-        new PostalAddress(
-          "123 Mockingbird Lane",
-          "Boulder",
-          "CO",
-          "80301",
-          "US"),
-        new Telephone("303-555-1210"),
-        new Telephone("303-555-1212")))
+      user.changePersonalContactInformation(
+        new ContactInformation(
+          new EmailAddress(fixture.USER_EMAIL_ADDRESS2),
+          new PostalAddress(
+            "123 Mockingbird Lane",
+            "Boulder",
+            "CO",
+            "80301",
+            "US"),
+          new Telephone("303-555-1210"),
+          new Telephone("303-555-1212")))
 
-    _.isEqual(new EmailAddress(fixture.USER_EMAIL_ADDRESS2), user.person.emailAddress)
-      .should.be.true
-    "123 Mockingbird Lane".should.equal(user.person.contactInformation.postalAddress.streetAddress)
-  })
+      _.isEqual(new EmailAddress(fixture.USER_EMAIL_ADDRESS2),
+        user.person.emailAddress)
+        .should.be.true
+      "123 Mockingbird Lane".should.equal(
+        user.person.contactInformation.postalAddress.streetAddress)
+    }
+  )
 
   it("Should allow for a name change", function(done) {
     let user = fixture.userAggregate()
@@ -187,5 +206,4 @@ describe("User", function() {
 
     user.changePersonalName(new FullName("Joe", "Smith"))
   })
-
 })

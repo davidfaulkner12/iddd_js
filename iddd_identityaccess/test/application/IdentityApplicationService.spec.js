@@ -1,3 +1,7 @@
+/* eslint-env node, mocha */
+/* eslint no-new: "off" */
+/* eslint no-unused-expressions: "off" */
+
 const chai = require("chai")
 const should = chai.should()
 
@@ -22,18 +26,12 @@ const {
 } = require("../../application/command/Commands")
 
 const DomainRegistry = require("../../domain/DomainRegistry")
-const ApplicationServiceRegistry = require("../../application/ApplicationServiceRegistry")
-  /*
-  import com.saasovation.identityaccess.domain.model.identity.Group;
-  import com.saasovation.identityaccess.domain.model.identity.Tenant;
-  import com.saasovation.identityaccess.domain.model.identity.User;
-  import com.saasovation.identityaccess.domain.model.identity.UserDescriptor;
-  */
+const ApplicationServiceRegistry =
+  require("../../application/ApplicationServiceRegistry")
 
 const fixture = require("../domain/IdentityAccessFixtures")
 
 describe("IdentityApplicationServiceTest", function() {
-
   beforeEach(function() {
     fixture.clean()
   })
@@ -43,15 +41,16 @@ describe("IdentityApplicationServiceTest", function() {
   })
 
   it("ActivateTenant", function() {
-    let tenant = fixture.tenantAggregate();
-    tenant.deactivate();
+    let tenant = fixture.tenantAggregate()
+    tenant.deactivate()
     tenant.active.should.be.false
 
     ApplicationServiceRegistry
       .identityApplicationService
-      .activateTenant(new ActivateTenantCommand(tenant.tenantId.id));
+      .activateTenant(new ActivateTenantCommand(tenant.tenantId.id))
 
-    let changedTenant = DomainRegistry.tenantRepository.tenantOfId(tenant.tenantId);
+    let changedTenant =
+      DomainRegistry.tenantRepository.tenantOfId(tenant.tenantId)
 
     should.exist(changedTenant)
     changedTenant.name.should.equal(tenant.name)
@@ -59,11 +58,11 @@ describe("IdentityApplicationServiceTest", function() {
   })
 
   it("AddGroupToGroup", function() {
-    let parentGroup = fixture.group1Aggregate();
-    DomainRegistry.groupRepository.add(parentGroup);
+    let parentGroup = fixture.group1Aggregate()
+    DomainRegistry.groupRepository.add(parentGroup)
 
-    let childGroup = fixture.group2Aggregate();
-    DomainRegistry.groupRepository.add(childGroup);
+    let childGroup = fixture.group2Aggregate()
+    DomainRegistry.groupRepository.add(childGroup)
 
     parentGroup.groupMembers.length.should.equal(0)
 
@@ -72,32 +71,32 @@ describe("IdentityApplicationServiceTest", function() {
       .addGroupToGroup(new AddGroupToGroupCommand(
         parentGroup.tenantId.id,
         parentGroup.name,
-        childGroup.name));
-        
+        childGroup.name))
+
     parentGroup.groupMembers.length.should.equal(1)
   })
 
   it("AddUserToGroup", function() {
-    let parentGroup = fixture.group1Aggregate();
-    DomainRegistry.groupRepository.add(parentGroup);
+    let parentGroup = fixture.group1Aggregate()
+    DomainRegistry.groupRepository.add(parentGroup)
 
-    let childGroup = fixture.group2Aggregate();
-    DomainRegistry.groupRepository.add(childGroup);
+    let childGroup = fixture.group2Aggregate()
+    DomainRegistry.groupRepository.add(childGroup)
 
-    let user = fixture.userAggregate();
-    DomainRegistry.userRepository.add(user);
+    let user = fixture.userAggregate()
+    DomainRegistry.userRepository.add(user)
 
     parentGroup.groupMembers.length.should.equal(0)
     childGroup.groupMembers.length.should.equal(0)
 
-    parentGroup.addGroup(childGroup, DomainRegistry.groupMemberService);
+    parentGroup.addGroup(childGroup, DomainRegistry.groupMemberService)
 
     ApplicationServiceRegistry
       .identityApplicationService
       .addUserToGroup(new AddUserToGroupCommand(
         childGroup.tenantId.id,
         childGroup.name,
-        user.username));
+        user.username))
 
     parentGroup.groupMembers.length.should.equal(1)
     childGroup.groupMembers.length.should.equal(1)
@@ -106,8 +105,8 @@ describe("IdentityApplicationServiceTest", function() {
   })
 
   it("AuthenticateUser", function() {
-    let user = fixture.userAggregate();
-    DomainRegistry.userRepository.add(user);
+    let user = fixture.userAggregate()
+    DomainRegistry.userRepository.add(user)
 
     let userDescriptor =
       ApplicationServiceRegistry
@@ -115,21 +114,22 @@ describe("IdentityApplicationServiceTest", function() {
       .authenticateUser(new AuthenticateUserCommand(
         user.tenantId.id,
         user.username,
-        fixture.PASSWORD));
+        fixture.PASSWORD))
 
     should.exist(userDescriptor)
     userDescriptor.username.should.equal(user.username)
   })
 
   it("DeactivateTenant", function() {
-    let tenant = fixture.tenantAggregate();
+    let tenant = fixture.tenantAggregate()
     tenant.active.should.be.true
 
     ApplicationServiceRegistry
       .identityApplicationService
-      .deactivateTenant(new DeactivateTenantCommand(tenant.tenantId.id));
+      .deactivateTenant(new DeactivateTenantCommand(tenant.tenantId.id))
 
-    let changedTenant = DomainRegistry.tenantRepository.tenantOfId(tenant.tenantId);
+    let changedTenant =
+      DomainRegistry.tenantRepository.tenantOfId(tenant.tenantId)
 
     should.exist(changedTenant)
     changedTenant.name.should.equal(tenant.name)
@@ -137,8 +137,8 @@ describe("IdentityApplicationServiceTest", function() {
   })
 
   it("ChangeUserContactInformation", function() {
-    let user = fixture.userAggregate();
-    DomainRegistry.userRepository.add(user);
+    let user = fixture.userAggregate()
+    DomainRegistry.userRepository.add(user)
 
     ApplicationServiceRegistry
       .identityApplicationService
@@ -153,26 +153,29 @@ describe("IdentityApplicationServiceTest", function() {
           "Loveland",
           "CO",
           "80771",
-          "US"));
+          "US"))
 
     let changedUser =
       DomainRegistry
       .userRepository
       .userWithUsername(
         user.tenantId,
-        user.username);
+        user.username)
 
     should.exist(changedUser)
-    changedUser.person.emailAddress.address.should.equal("mynewemailaddress@saasovation.com")
-    changedUser.person.contactInformation.primaryTelephone.number.should.equal("777-555-1211")
-    changedUser.person.contactInformation.secondaryTelephone.number.should.equal("777-555-1212")
-    changedUser.person.contactInformation.postalAddress.streetAddress.should.equal("123 Pine Street")
-    changedUser.person.contactInformation.postalAddress.city.should.equal("Loveland")
+    changedUser.person.emailAddress.address.should.equal(
+      "mynewemailaddress@saasovation.com")
+
+    let info = changedUser.person.contactInformation
+    info.primaryTelephone.number.should.equal("777-555-1211")
+    info.secondaryTelephone.number.should.equal("777-555-1212")
+    info.postalAddress.streetAddress.should.equal("123 Pine Street")
+    info.postalAddress.city.should.equal("Loveland")
   })
 
   it("ChangeUserEmailAddress", function() {
-    let user = fixture.userAggregate();
-    DomainRegistry.userRepository.add(user);
+    let user = fixture.userAggregate()
+    DomainRegistry.userRepository.add(user)
 
     ApplicationServiceRegistry
       .identityApplicationService
@@ -180,22 +183,23 @@ describe("IdentityApplicationServiceTest", function() {
         new ChangeEmailAddressCommand(
           user.tenantId.id,
           user.username,
-          "mynewemailaddress@saasovation.com"));
+          "mynewemailaddress@saasovation.com"))
 
     let changedUser =
       DomainRegistry
       .userRepository
       .userWithUsername(
         user.tenantId,
-        user.username);
+        user.username)
 
     should.exist(changedUser)
-    changedUser.person.emailAddress.address.should.equal("mynewemailaddress@saasovation.com")
+    changedUser.person.emailAddress.address.should.equal(
+      "mynewemailaddress@saasovation.com")
   })
 
   it("ChangeUserPostalAddress", function() {
-    let user = fixture.userAggregate();
-    DomainRegistry.userRepository.add(user);
+    let user = fixture.userAggregate()
+    DomainRegistry.userRepository.add(user)
 
     ApplicationServiceRegistry
       .identityApplicationService
@@ -207,23 +211,24 @@ describe("IdentityApplicationServiceTest", function() {
           "Loveland",
           "CO",
           "80771",
-          "US"));
+          "US"))
 
     let changedUser =
       DomainRegistry
       .userRepository
       .userWithUsername(
         user.tenantId,
-        user.username);
+        user.username)
 
     should.exist(changedUser)
-    changedUser.person.contactInformation.postalAddress.streetAddress.should.equal("123 Pine Street")
-    changedUser.person.contactInformation.postalAddress.city.should.equal("Loveland")
+    let info = changedUser.person.contactInformation
+    info.postalAddress.streetAddress.should.equal("123 Pine Street")
+    info.postalAddress.city.should.equal("Loveland")
   })
 
   it("ChangeUserPrimaryTelephone", function() {
-    let user = fixture.userAggregate();
-    DomainRegistry.userRepository.add(user);
+    let user = fixture.userAggregate()
+    DomainRegistry.userRepository.add(user)
 
     ApplicationServiceRegistry
       .identityApplicationService
@@ -231,22 +236,23 @@ describe("IdentityApplicationServiceTest", function() {
         new ChangePrimaryTelephoneCommand(
           user.tenantId.id,
           user.username,
-          "777-555-1211"));
+          "777-555-1211"))
 
     let changedUser =
       DomainRegistry
       .userRepository
       .userWithUsername(
         user.tenantId,
-        user.username);
+        user.username)
 
     should.exist(changedUser)
-    changedUser.person.contactInformation.primaryTelephone.number.should.equal("777-555-1211")
+    changedUser.person.contactInformation
+      .primaryTelephone.number.should.equal("777-555-1211")
   })
 
   it("ChangeUserSecondaryTelephone", function() {
-    let user = fixture.userAggregate();
-    DomainRegistry.userRepository.add(user);
+    let user = fixture.userAggregate()
+    DomainRegistry.userRepository.add(user)
 
     ApplicationServiceRegistry
       .identityApplicationService
@@ -254,22 +260,23 @@ describe("IdentityApplicationServiceTest", function() {
         new ChangeSecondaryTelephoneCommand(
           user.tenantId.id,
           user.username,
-          "777-555-1212"));
+          "777-555-1212"))
 
     let changedUser =
       DomainRegistry
       .userRepository
       .userWithUsername(
         user.tenantId,
-        user.username);
+        user.username)
 
     should.exist(changedUser)
-    changedUser.person.contactInformation.secondaryTelephone.number.should.equal("777-555-1212")
+    changedUser.person.contactInformation
+      .secondaryTelephone.number.should.equal("777-555-1212")
   })
 
   it("ChangeUserPassword", function() {
-    let user = fixture.userAggregate();
-    DomainRegistry.userRepository.add(user);
+    let user = fixture.userAggregate()
+    DomainRegistry.userRepository.add(user)
 
     ApplicationServiceRegistry
       .identityApplicationService
@@ -278,7 +285,7 @@ describe("IdentityApplicationServiceTest", function() {
           user.tenantId.id,
           user.username,
           fixture.PASSWORD,
-          "THIS.IS.JOE'S.NEW.PASSWORD"));
+          "THIS.IS.JOE'S.NEW.PASSWORD"))
 
     let userDescriptor =
       ApplicationServiceRegistry
@@ -286,15 +293,15 @@ describe("IdentityApplicationServiceTest", function() {
       .authenticateUser(new AuthenticateUserCommand(
         user.tenantId.id,
         user.username,
-        "THIS.IS.JOE'S.NEW.PASSWORD"));
+        "THIS.IS.JOE'S.NEW.PASSWORD"))
 
     should.exist(userDescriptor)
     userDescriptor.username.should.equal(user.username)
   })
 
   it("ChangeUserPersonalName", function() {
-    let user = fixture.userAggregate();
-    DomainRegistry.userRepository.add(user);
+    let user = fixture.userAggregate()
+    DomainRegistry.userRepository.add(user)
 
     ApplicationServiceRegistry
       .identityApplicationService
@@ -303,25 +310,25 @@ describe("IdentityApplicationServiceTest", function() {
           user.tenantId.id,
           user.username,
           "World",
-          "Peace"));
+          "Peace"))
 
     let changedUser =
       DomainRegistry
       .userRepository
       .userWithUsername(
         user.tenantId,
-        user.username);
+        user.username)
 
     should.exist(changedUser)
     changedUser.person.name.asFormattedName().should.equal("World Peace")
   })
 
   it("DefineUserEnablement", function() {
-    let user = fixture.userAggregate();
-    DomainRegistry.userRepository.add(user);
+    let user = fixture.userAggregate()
+    DomainRegistry.userRepository.add(user)
 
-    let now = new Date();
-    let then = new Date(now.valueOf() + (60 * 60 * 24 * 365 * 1000));
+    let now = new Date()
+    let then = new Date(now.valueOf() + (60 * 60 * 24 * 365 * 1000))
 
     ApplicationServiceRegistry
       .identityApplicationService
@@ -331,34 +338,34 @@ describe("IdentityApplicationServiceTest", function() {
           user.username,
           true,
           now,
-          then));
+          then))
 
     let changedUser =
       DomainRegistry
       .userRepository
       .userWithUsername(
         user.tenantId,
-        user.username);
+        user.username)
 
     should.exist(changedUser)
     changedUser.enabled.should.be.true
   })
 
   it("IsGroupMember", function() {
-    let parentGroup = fixture.group1Aggregate();
-    DomainRegistry.groupRepository.add(parentGroup);
+    let parentGroup = fixture.group1Aggregate()
+    DomainRegistry.groupRepository.add(parentGroup)
 
-    let childGroup = fixture.group2Aggregate();
-    DomainRegistry.groupRepository.add(childGroup);
+    let childGroup = fixture.group2Aggregate()
+    DomainRegistry.groupRepository.add(childGroup)
 
-    let user = fixture.userAggregate();
-    DomainRegistry.userRepository.add(user);
+    let user = fixture.userAggregate()
+    DomainRegistry.userRepository.add(user)
 
     parentGroup.groupMembers.length.should.equal(0)
     childGroup.groupMembers.length.should.equal(0)
 
-    parentGroup.addGroup(childGroup, DomainRegistry.groupMemberService);
-    childGroup.addUser(user);
+    parentGroup.addGroup(childGroup, DomainRegistry.groupMemberService)
+    childGroup.addUser(user)
 
     ApplicationServiceRegistry
       .identityApplicationService
@@ -376,13 +383,13 @@ describe("IdentityApplicationServiceTest", function() {
   })
 
   it("RemoveGroupFromGroup", function() {
-    let parentGroup = fixture.group1Aggregate();
-    DomainRegistry.groupRepository.add(parentGroup);
+    let parentGroup = fixture.group1Aggregate()
+    DomainRegistry.groupRepository.add(parentGroup)
 
-    let childGroup = fixture.group2Aggregate();
-    DomainRegistry.groupRepository.add(childGroup);
+    let childGroup = fixture.group2Aggregate()
+    DomainRegistry.groupRepository.add(childGroup)
 
-    parentGroup.addGroup(childGroup, DomainRegistry.groupMemberService);
+    parentGroup.addGroup(childGroup, DomainRegistry.groupMemberService)
 
     parentGroup.groupMembers.length.should.equal(1)
 
@@ -391,23 +398,23 @@ describe("IdentityApplicationServiceTest", function() {
       .removeGroupFromGroup(new RemoveGroupFromGroupCommand(
         parentGroup.tenantId.id,
         parentGroup.name,
-        childGroup.name));
+        childGroup.name))
 
     parentGroup.groupMembers.length.should.equal(0)
   })
 
   it("RemoveUserFromGroup", function() {
-    let parentGroup = fixture.group1Aggregate();
-    DomainRegistry.groupRepository.add(parentGroup);
+    let parentGroup = fixture.group1Aggregate()
+    DomainRegistry.groupRepository.add(parentGroup)
 
-    let childGroup = fixture.group2Aggregate();
-    DomainRegistry.groupRepository.add(childGroup);
+    let childGroup = fixture.group2Aggregate()
+    DomainRegistry.groupRepository.add(childGroup)
 
-    let user = fixture.userAggregate();
-    DomainRegistry.userRepository.add(user);
+    let user = fixture.userAggregate()
+    DomainRegistry.userRepository.add(user)
 
-    parentGroup.addGroup(childGroup, DomainRegistry.groupMemberService);
-    childGroup.addUser(user);
+    parentGroup.addGroup(childGroup, DomainRegistry.groupMemberService)
+    childGroup.addUser(user)
 
     parentGroup.groupMembers.length.should.equal(1)
     childGroup.groupMembers.length.should.equal(1)
@@ -419,47 +426,48 @@ describe("IdentityApplicationServiceTest", function() {
       .removeUserFromGroup(new RemoveUserFromGroupCommand(
         childGroup.tenantId.id,
         childGroup.name,
-        user.username));
+        user.username))
 
     parentGroup.groupMembers.length.should.equal(1)
     childGroup.groupMembers.length.should.equal(0)
-    parentGroup.isMember(user, DomainRegistry.groupMemberService).should.be.false
+    parentGroup.isMember(user, DomainRegistry.groupMemberService)
+      .should.be.false
     childGroup.isMember(user, DomainRegistry.groupMemberService).should.be.false
   })
 
   it("QueryTenant", function() {
-    let tenant = fixture.tenantAggregate();
+    let tenant = fixture.tenantAggregate()
 
     let queriedTenant =
       ApplicationServiceRegistry
       .identityApplicationService
-      .tenant(tenant.tenantId.id);
+      .tenant(tenant.tenantId.id)
 
     should.exist(queriedTenant)
     queriedTenant.should.equal(tenant)
   })
 
   it("QueryUser", function() {
-    let user = fixture.userAggregate();
-    DomainRegistry.userRepository.add(user);
+    let user = fixture.userAggregate()
+    DomainRegistry.userRepository.add(user)
 
     let queriedUser =
       ApplicationServiceRegistry
       .identityApplicationService
-      .user(user.tenantId.id, user.username);
+      .user(user.tenantId.id, user.username)
 
     should.exist(user)
     queriedUser.should.equal(user)
   })
 
   it("QueryUserDescriptor", function() {
-    let user = fixture.userAggregate();
-    DomainRegistry.userRepository.add(user);
+    let user = fixture.userAggregate()
+    DomainRegistry.userRepository.add(user)
 
     let queriedUserDescriptor =
       ApplicationServiceRegistry
       .identityApplicationService
-      .userDescriptor(user.tenantId.id, user.username);
+      .userDescriptor(user.tenantId.id, user.username)
 
     should.exist(user)
     _.isEqual(queriedUserDescriptor, user.userDescriptor).should.be.true

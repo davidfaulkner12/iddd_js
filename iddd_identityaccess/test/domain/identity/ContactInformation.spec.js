@@ -1,5 +1,8 @@
-const chai = require("chai")
-const should = chai.should()
+/* eslint-env node, mocha */
+/* eslint no-new: "off" */
+/* eslint no-unused-expressions: "off" */
+
+require("chai").should()
 
 const _ = require("underscore")
 
@@ -14,85 +17,88 @@ const fixture = require("../IdentityAccessFixtures")
 
 describe("ContactInformation", function() {
   it("ContactInformation", function() {
-    let contactInformation = fixture.contactInformation();
+    let contactInformation = fixture.contactInformation()
 
-    fixture.USER_EMAIL_ADDRESS.should.equal(contactInformation.emailAddress.address)
+    fixture.USER_EMAIL_ADDRESS.should.equal(
+      contactInformation.emailAddress.address)
     "Boulder".should.equal(contactInformation.postalAddress.city)
     "CO".should.equal(contactInformation.postalAddress.stateProvince)
   })
 
   it("ChangeEmailAddress", function() {
-    let contactInformation = fixture.contactInformation();
-    let contactInformationCopy = new ContactInformation(contactInformation);
+    let contactInformation = fixture.contactInformation()
+    let contactInformationCopy = new ContactInformation(contactInformation)
 
     let contactInformation2 =
       contactInformation
       .changeEmailAddress(
-        new EmailAddress(fixture.USER_EMAIL_ADDRESS2));
+        new EmailAddress(fixture.USER_EMAIL_ADDRESS2))
 
     _.isEqual(contactInformationCopy, contactInformation).should.be.true
     _.isEqual(contactInformation, contactInformation2).should.be.false
     _.isEqual(contactInformationCopy, contactInformation2).should.be.false
 
-    fixture.USER_EMAIL_ADDRESS.should.equal(contactInformation.emailAddress.address)
-    fixture.USER_EMAIL_ADDRESS2.should.equal(contactInformation2.emailAddress.address)
+    fixture.USER_EMAIL_ADDRESS.should.equal(
+      contactInformation.emailAddress.address)
+    fixture.USER_EMAIL_ADDRESS2.should.equal(
+      contactInformation2.emailAddress.address)
     "Boulder".should.equal(contactInformation.postalAddress.city)
     "CO".should.equal(contactInformation.postalAddress.stateProvince)
   })
 
   it("ChangePostalAddress", function() {
-    let contactInformation = fixture.contactInformation();
-    let contactInformationCopy = new ContactInformation(contactInformation);
+    let contactInformation = fixture.contactInformation()
+    let contactInformationCopy = new ContactInformation(contactInformation)
 
     let contactInformation2 =
       contactInformation
       .changePostalAddress(
-        new PostalAddress("321 Mockingbird Lane", "Denver", "CO", "81121", "US"));
+        new PostalAddress("321 Mockingbird Lane",
+          "Denver", "CO", "81121", "US"))
 
     _.isEqual(contactInformationCopy, contactInformation).should.be.true
     _.isEqual(contactInformation, contactInformation2).should.be.false
     _.isEqual(contactInformationCopy, contactInformation2).should.be.false
 
-      "321 Mockingbird Lane".should.equal(contactInformation2.postalAddress.streetAddress)
+    "321 Mockingbird Lane".should.equal(
+      contactInformation2.postalAddress.streetAddress)
     "Denver".should.equal(contactInformation2.postalAddress.city)
     "CO".should.equal(contactInformation2.postalAddress.stateProvince)
   })
 
   it("ChangePrimaryTelephone", function() {
-    let contactInformation = fixture.contactInformation();
-    let contactInformationCopy = new ContactInformation(contactInformation);
+    let contactInformation = fixture.contactInformation()
+    let contactInformationCopy = new ContactInformation(contactInformation)
 
     let contactInformation2 =
       contactInformation
       .changePrimaryTelephone(
-        new Telephone("720-555-1212"));
+        new Telephone("720-555-1212"))
 
     _.isEqual(contactInformationCopy, contactInformation).should.be.true
     _.isEqual(contactInformation, contactInformation2).should.be.false
     _.isEqual(contactInformationCopy, contactInformation2).should.be.false
 
-
-      "720-555-1212".should.equal(contactInformation2.primaryTelephone.number)
+    "720-555-1212".should.equal(contactInformation2.primaryTelephone.number)
     "Boulder".should.equal(contactInformation2.postalAddress.city)
     "CO".should.equal(contactInformation2.postalAddress.stateProvince)
   })
 
   it("ChangeSecondaryTelephone", function() {
-    let contactInformation = fixture.contactInformation();
-    let contactInformationCopy = new ContactInformation(contactInformation);
+    let contactInformation = fixture.contactInformation()
+    let contactInformationCopy = new ContactInformation(contactInformation)
 
     let contactInformation2 =
       contactInformation
       .changeSecondaryTelephone(
-        new Telephone("720-555-1212"));
+        new Telephone("720-555-1212"))
 
     _.isEqual(contactInformationCopy, contactInformation).should.be.true
     _.isEqual(contactInformation, contactInformation2).should.be.false
     _.isEqual(contactInformationCopy, contactInformation2).should.be.false
 
-      "720-555-1212".should.equal(contactInformation2.secondaryTelephone.number)
+    "720-555-1212".should.equal(contactInformation2.secondaryTelephone.number)
     "Boulder".should.equal(contactInformation2.postalAddress.city)
     "CO".should.equal(contactInformation2.postalAddress.stateProvince)
   })
-
 })
