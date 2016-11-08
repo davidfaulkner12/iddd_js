@@ -1,3 +1,4 @@
+// Preamble
 const chai = require("chai")
 const should = chai.should()
 
@@ -9,16 +10,18 @@ describe("xxxx", function() {
 
 })
 
+// Find and replace 1
 public void test(\w+)\(\) throws Exception \{
 it("$1", function() {
 
+// Find and replace 2
 ^(\s)+}
 $1})
 
-ContactInformation cont
-
+// Find and replace 3
 assertEquals\((.*), (.*)\);
 $1.should.equal($2)
 
+// Find and replace 4
 assertFalse\((.*)\);
 $1.should.be.false
