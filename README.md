@@ -10,7 +10,8 @@ This port has in no way been endorsed by the author in any fashion.
 I did a port by hand to explore how to implement these concepts in node.js.
 There is an accompanying blog series available here:
 
-link
+* [Part 1: Running the Original](http://david.wangfaulkner.com/iddd-in-javascript-part-1-running-the-original)
+* [Part 2: Tests and Decisions](http://david.wangfaulkner.com/iddd-in-javascript-part-2-tests-and-decisions)
 
 Each blog post is backed by a branch -- there are descriptions of this in the blog post. You can see the evolution of this port by looking at the branches in
 order.
